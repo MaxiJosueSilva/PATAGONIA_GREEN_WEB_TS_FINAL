@@ -1,0 +1,49 @@
+.container-user {
+    width: 100vw;
+    height: 85vh;
+    padding: 20px;
+    overflow: auto;
+}
+
+.form-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-container h1 {
+    text-align: center;
+}
+
+.form-container .btn {
+    width: 100%;
+}
+
+.table-container {
+    margin-top: 20px;
+    overflow: auto;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container th, .table-container td {
+    padding: 10px;
+    text-align: left;
+}
+
+.table-container th {
+    background-color: #f2f2f2;
+}
+
+.table-container tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table-container tr:hover {
+    background-color: #f1f1f1;
+}

@@ -1,0 +1,8 @@
+#!C:\Users\maxim\OneDrive\Documentos\GitHub\PATAGONIA_GREEN_WEB\backend-flask\venv\Scripts\python.exe
+# -*- coding: UTF-8 -*-
+from __future__ import print_function, division, absolute_import
+
+from numba.misc.numba_entry import main
+
+if __name__ == "__main__":
+    main()

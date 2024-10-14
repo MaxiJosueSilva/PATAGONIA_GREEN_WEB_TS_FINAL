@@ -1,0 +1,42 @@
+Pasos para ejecutar el proyecto con Docker:
+
+1. Asegúrate de tener Docker y Docker Compose instalados en tu sistema.
+
+2. Clona el repositorio del proyecto en tu máquina local.
+
+3. Navega hasta el directorio raíz del proyecto donde se encuentra el archivo docker-compose.yml.
+
+4. Crea un archivo .env en el directorio raíz y configura las variables de entorno necesarias. Puedes usar el archivo .env.example como referencia.
+
+5. Construye las imágenes de Docker:
+   docker-compose build
+
+6. Inicia los contenedores:
+   docker-compose up -d
+
+7. Para ver los logs de los contenedores:
+   docker-compose logs -f
+
+8. Para detener los contenedores:
+   docker-compose down
+
+9. Si necesitas reconstruir las imágenes después de hacer cambios:
+   docker-compose up -d --build
+
+10. Para acceder a la aplicación, abre un navegador y visita:
+    http://localhost:80
+
+11. Para acceder a la API backend:
+    http://localhost:3000
+
+12. Para crear una imagen Docker del proyecto completo:
+    docker build -t patagonia-green-conservation:latest .
+
+13. Para subir la imagen a un registro de Docker (por ejemplo, Docker Hub):
+    docker tag patagonia-green-conservation:latest tu-usuario/patagonia-green-conservation:latest
+    docker push tu-usuario/patagonia-green-conservation:latest
+
+Notas adicionales:
+- Asegúrate de que los puertos 80 y 3000 estén disponibles en tu máquina.
+- Si encuentras problemas de permisos al ejecutar los comandos de Docker, puede que necesites usar 'sudo' antes de cada comando.
+- Recuerda actualizar las variables de entorno en el archivo .env según sea necesario para tu entorno de producción.

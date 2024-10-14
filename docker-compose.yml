@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - FLASK_ENV=${FLASK_ENV}
+      - FLASK_APP=${FLASK_APP}
+      - FLASK_RUN_HOST=${FLASK_RUN_HOST}
+      - FLASK_RUN_PORT=${FLASK_RUN_PORT}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - NEO4J_URI=bolt://neo4j:7687
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+    depends_on:
+      - mysql
+      - neo4j
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  neo4j:
+    image: neo4j:4.4
+    environment:
+      - NEO4J_AUTH=${NEO4J_AUTH}
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+
+volumes:
+  mysql_data:
+  neo4j_data:

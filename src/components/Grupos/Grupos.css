@@ -1,0 +1,83 @@
+body {
+    overflow: auto;
+    background-color: #121212; /* Fondo oscuro */
+    color: #e0f2f7; /* Texto azul claro */
+    font-family: 'Roboto', sans-serif; /* Fuente moderna */
+}
+
+.dashboard-container {
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    overflow-y: auto;
+    width: 100%; /* Limitar el ancho máximo del contenedor */
+    margin: 0 auto; /* Centrar el contenedor */
+    height: calc(100vh - 50px); /* Asegurar que el contenedor ocupe toda la altura de la ventana, descontando 50px para el nav bar */
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+.sections-container { 
+    height: 90%;
+    display: flex;
+    flex-direction: column; /* ¡IMPORTANTE! Cambiamos a row */
+    gap: 10px; /* Añadimos una separación entre las secciones */
+}
+
+.chart-row {
+    display: flex;
+    border-radius: 10px;
+    background-color: #1e272e;
+    justify-content: space-between;
+    align-items: flex-start; /* Alineamos los elementos en la parte superior */
+    height: 300px;
+    gap: 10px;
+}
+
+.value-list {
+    flex: 1; /* La lista ocupa el espacio necesario */
+    max-width: 250px;
+    background-color: #222f3e;
+    padding: 15px;
+    border-radius: 8px;
+    list-style: none;
+    margin: 0;
+}
+
+.value-list li {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.Line, .Radar {
+    flex: 1;
+    max-width: 500px; /* Limitar el ancho máximo */
+}
+
+.Line canvas, .Radar canvas {
+    background-color: #222f3e; /* Fondo ligeramente más claro */
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 500px; /* Limitar el ancho máximo */
+    max-height: 400px; /* Limitar el alto máximo */
+}
+.Line canvas:hover, .Radar canvas:hover {
+    transform: scale(1.05); /* Agrandar ligeramente al pasar el ratón */
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3); /* Sombra más prominente al pasar el ratón */
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .chart-row {
+        flex-direction: column;
+    }
+
+    .Line, .Radar, .value-list {
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+
+    .Line canvas, .Radar canvas {
+        max-width: 100%;
+        max-height: 200px; /* Limitar el tamaño en pantallas pequeñas */
+    }
+}

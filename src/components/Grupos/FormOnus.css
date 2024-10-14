@@ -1,0 +1,74 @@
+
+/* App.css */
+.container-camaras {
+  width: 100vw;
+  height: 100vh;
+  padding: 10px;
+  overflow: auto;
+}
+
+.form-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+}
+
+.form-container h2 {
+  text-align: center;
+}
+
+.form-container .btn {
+  width: 100%;
+}
+
+.table-container {
+  margin-top: 20px;
+  overflow: auto;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-container th, .table-container td {
+  padding: 10px;
+  text-align: left;
+}
+
+.table-container th {
+  background-color: #ffffff;
+}
+
+.table-container tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.table-container tr:hover {
+  background-color: #ffffff;
+}
+
+/* Asegura que las celdas tengan texto visible */
+td, th {
+  color: #000; /* Cambia a un color que sea visible en el fondo */
+}
+/* Asegura que el fondo de las celdas no sea blanco o que contraste con el texto */
+table {
+  background-color: #fff; /* Fondo blanco */
+}
+
+tr {
+  background-color: #ffffff; /* Color alternativo para las filas */
+}
+
+thead {
+  background-color: #2a148d; /* Fondo para el encabezado */
+}
+
+@media (max-width: 768px) {
+  .table-responsive {
+    max-height: none;
+  }
+}
