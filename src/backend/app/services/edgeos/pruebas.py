@@ -46,5 +46,52 @@ def probar_reboot_onu():
         print("Error al iniciar sesión para reboot_onu")
         print("ALARMA: No se pudo iniciar sesión para reiniciar la ONU")
 
+
+
+
 # Llamar a la función de prueba para reboot_onu
-probar_reboot_onu()
+#probar_reboot_onu()
+def setear_onu():
+    api = EdgeMaxAPI(host="10.10.110.214", username="maxi", password="maxi2021$")
+    
+    # Número de serie de la ONU
+    onu_serial = "UBNTb999fa46"
+    
+    # Payload con la configuración completa de la ONU
+    payload = {
+        "SET": {
+            "onu-list": {
+                onu_serial: {
+                    "disable": "false",
+                    "profile": "default",  # Perfil usado
+                    "name": "PRUEBAS-ADAM6060",  # Nombre de la ONU
+                    "wifi": {  # Configuración WiFi
+                        "provisioned": False,
+                        "enabled": True,
+                        "ssid": "UBNT-ONU",
+                        "hide-ssid": False,
+                        "auth-mode": "wpa2psk",
+                        "wpapsk": "",  # Contraseña WPA (vacía en este caso)
+                        "channel": "auto",
+                        "channel-width": "20/40",
+                        "tx-power": "100"  # Potencia de transmisión
+                    },
+                    "pppoe-mode": "auto",  # Modo PPPoE
+                    "pppoe-user": "",  # Usuario PPPoE
+                    "pppoe-password": "",  # Contraseña PPPoE
+                    "wan-address": "",  # Dirección WAN (vacía)
+                    "port-forwards": []  # No hay redirecciones de puertos
+                }
+            }
+        }
+    }
+
+    # Iniciar sesión
+    if api.login():
+        # Setear la ONU con el número de serie y el payload definido
+        api.set_onu(onu_serial)
+    else:
+        print("Error al iniciar sesión en el dispositivo.")
+
+# Llamada a la función para setear la ONU
+setear_onu()

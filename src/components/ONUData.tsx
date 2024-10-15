@@ -41,8 +41,8 @@ const ONUData: React.FC<ONUDataProps> = ({ data }) => {
   const { online, serial_number, name, mac_address, firmware_version, status, distance, system, optics, stats } = data;
 
   return (
-    <div style={{ padding: '10px', backgroundColor: '#f0f0f0', color: '#333', borderRadius: '5px', width: '100%', height: '100%', overflow: 'auto', fontSize: '0.8rem' }}>
-      <h4 className="text-sm font-semibold mb-2"><FaMicrochip /> Información del Sistema</h4>
+    <div style={{ padding: '10px', backgroundColor: 'transparent', color: 'white', borderRadius: '5px', width: '100%', height: '100%', overflow: 'auto', fontSize: '0.8rem' }}>
+      <h4 className="text-sm font-semibold mb-2 text-center flex items-center justify-center"><FaMicrochip /> Información del Sistema</h4>
       <div className="flex justify-between mb-2">
         <div>
           <p>CPU: {system.cpu}%</p>
@@ -58,7 +58,7 @@ const ONUData: React.FC<ONUDataProps> = ({ data }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         <div>
           <h6 className="font-semibold"><FaWifi /> ONU Estado: {online === "true" ? 'Online' : 'Offline'}</h6>
           <p>Serie: {serial_number}</p>
@@ -72,12 +72,12 @@ const ONUData: React.FC<ONUDataProps> = ({ data }) => {
           <p>TX (OLT): {optics.tx_power_olt}</p>
           <p>RX (OLT): {optics.rx_power_olt}</p>
         </div>
-      </div>
-      
-      <h6 className="font-semibold mt-2"><FaArrowUp /> Tráfico</h6>
-      <p>TX: {stats.tx_bps} bps | RX: {stats.rx_bps} bps</p>
-      <p>TX Total: {stats.tx_bytes} bytes | RX Total: {stats.rx_bytes} bytes</p>
-      
+        <div>
+          <h6 className="font-semibold"><FaArrowUp /> Tráfico</h6>
+          <p>TX: {stats.tx_bps} bps | RX: {stats.rx_bps} bps</p>
+          <p>TX Total: {stats.tx_bytes} bytes | RX Total: {stats.rx_bytes} bytes</p>
+        </div>
+      </div> 
       <p className="mt-2">Distancia: {distance} metros</p>
     </div>
   );

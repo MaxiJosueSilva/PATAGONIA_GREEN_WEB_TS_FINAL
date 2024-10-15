@@ -47,6 +47,7 @@ const InteractiveMap: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [visualization, setVisualization] = useState<string>('');
   const [selectedCamera, setSelectedCamera] = useState<Camara | null>(null);
+  const [mapType, setMapType] = useState("street"); // Estado para el tipo de mapa
   const [filterType, setFilterType] = useState<string>('');
   const [filterCapa, setFilterCapa] = useState<string>('');
   const staticCamaras = useSelector((state: RootState) => state.olt.onus as Camara[]);
@@ -55,6 +56,16 @@ const InteractiveMap: React.FC = () => {
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const getMapUrl = () => {
+    switch (mapType) {
+      case 'satellite':
+        return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{x}/{y}';
+      case 'terrain':
+        return 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
+      default:
+        return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    }
+  };
   const startTimer = () => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
@@ -162,6 +173,21 @@ const InteractiveMap: React.FC = () => {
       <div className="flex flex-1 relative">
         <div className="w-1/6 p-4 bg-gray-800 overflow-y-auto">
           <h2 className="text-xl font-bold mb-4 text-white">Filtros y Visualización</h2>
+
+          {/* Selector para tipo de mapa */}
+          <div className="mb-4">
+            <label className="block mb-2 text-white">Tipo de Mapa:</label>
+            <select
+              className="w-full p-2 border rounded bg-gray-700 text-white"
+              value={mapType}
+              onChange={(e) => setMapType(e.target.value)}
+            >
+              <option value="street">Callejero</option>
+              <option value="satellite">Satélite</option>
+              <option value="terrain">Terreno</option>
+            </select>
+          </div>
+
           <div className="mb-4">
             <label className="block mb-2 text-white">Visualización:</label>
             <select
@@ -176,6 +202,7 @@ const InteractiveMap: React.FC = () => {
               <option value="reinicio">Reinicios</option>
             </select>
           </div>
+
           <div className="mb-4">
             <label className="block mb-2 text-white">Filtrar por Tipo:</label>
             <select
@@ -189,6 +216,7 @@ const InteractiveMap: React.FC = () => {
               ))}
             </select>
           </div>
+
           <div className="mb-4">
             <label className="block mb-2 text-white">Filtrar por Capa:</label>
             <select
@@ -202,12 +230,14 @@ const InteractiveMap: React.FC = () => {
               ))}
             </select>
           </div>
+
           <DashboardStats camaras={filteredCamaras} />
         </div>
+
         <div className="w-5/6 relative">
           <MapContainer center={[-31.7333, -60.5233]} zoom={13} className="map-container">
             <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              url={getMapUrl()}
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
             {filteredCamaras.map((camara) => {
@@ -245,12 +275,14 @@ const InteractiveMap: React.FC = () => {
                 )
               );
             })}
+
             {visualization === 'temp_cpu' && (
               <HeatmapLayer
                 points={getHeatmapPoints()}
                 options={{ radius: 25, blur: 15, maxZoom: 17 }}
               />
             )}
+
             <MapLegend visualization={visualization} />
           </MapContainer>
           
@@ -285,7 +317,7 @@ const InteractiveMap: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           {selectedCamera && (
             <div 
               className="bottom-panel show"

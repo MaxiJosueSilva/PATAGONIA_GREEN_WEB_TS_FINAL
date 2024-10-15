@@ -26,6 +26,12 @@ const MapLegend: React.FC<MapLegendProps> = ({ visualization }) => {
           { color: '#2ECC40', label: 'Con energía' },
           { color: '#FF4136', label: 'Sin energía' },
         ];
+      case 'reinicio':
+        return [
+          { color: '#FF4136', label: 'Menos de 1 hora' },
+          { color: '#FFDC00', label: '1-24 horas' },
+          { color: '#2ECC40', label: 'Más de 24 horas' },
+        ];
       default:
         return [];
     }
@@ -36,7 +42,7 @@ const MapLegend: React.FC<MapLegendProps> = ({ visualization }) => {
   return (
     <div className="leaflet-bottom leaflet-left">
       <div className="leaflet-control leaflet-bar bg-gray-800 p-2 rounded shadow-md text-white">
-        <h4 className="font-bold mb-2">{visualization === 'temp_cpu' ? 'Temperatura CPU' : visualization === 'rx' ? 'Potencia RX' : 'Energía'}</h4>
+        <h4 className="font-bold mb-2">{visualization === 'temp_cpu' ? 'Temperatura CPU' : visualization === 'rx' ? 'Potencia RX' : visualization === 'energia' ? 'Energía' : 'Tiempo de Reinicio'}</h4>
         {legendItems.map((item, index) => (
           <div key={index} className="flex items-center mb-1">
             <div className="w-4 h-4 mr-2 rounded-full" style={{ backgroundColor: item.color }}></div>

@@ -150,7 +150,7 @@ class EdgeMaxAPI:
         
         data = json.dumps(payload)  # Convertir el diccionario a JSON
         
-        response = requests.post(url, headers=headers, data=data, verify=True)
+        response = requests.post(url, headers=headers, data=data, verify=False)
         print(response.status_code)
 
     def leer_logs(self, num_lineas=100):

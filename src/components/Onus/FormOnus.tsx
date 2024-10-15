@@ -7,6 +7,7 @@ import './FormOnus.css';
 //import { FaSearch } from 'react-icons/fa';
 import PasswordModal from '../UI/PasswordModal';
 import { AppDispatch, RootState } from '../../redux/store';
+import { decodeToken } from '../../services/authService'; // Importación de decodeToken
 
 const FormOnus: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,11 +37,11 @@ const FormOnus: React.FC = () => {
         return () => clearInterval(intervalId);
     }, [dispatch]);
 
-    const handleSearch = (e) => {
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     };
 
-    const handleSort = (field) => {
+    const handleSort = (field: string) => {
         if (sortField === field) {
             setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
         } else {
@@ -50,7 +51,7 @@ const FormOnus: React.FC = () => {
     };
 
     // Abre el modal al hacer clic en "Reiniciar"
-    const handleOpenModal = (onu) => {
+    const handleOpenModal = (onu: any) => {
         setSelectedOnu(onu);
         setShowModal(true);
     };
@@ -60,14 +61,14 @@ const FormOnus: React.FC = () => {
         setSelectedOnu(null);  // Limpia la ONU seleccionada
     };
 
-    const handleReboot = async (password) => {
-		let username = decodeToken().username 
-        if (password === 'admin') {
+    const handleReboot = async (password: string) => {
+		let username = decodeToken() ? decodeToken().username : null; 
+        if (password === 'admin' && username) {
             await dispatch(rebootOnu({ onu: selectedOnu, username: username}));
 			
             console.log(`Reiniciando la ONU ${selectedOnu.serial_number} en el OLT ${selectedOnu.olt}. por el Usuario ${username}`);
         } else {
-            console.log('Contraseña incorrecta.');
+            console.log('Contraseña incorrecta o usuario no identificado.');
         }
         handleCloseModal();  // Cierra el modal después de intentar el reinicio
     };

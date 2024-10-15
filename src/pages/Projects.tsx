@@ -1,46 +1,76 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+const Logo1 = "/src/assets/img_proyectos/1.jpg";
+const Logo2 = "/src/assets/img_proyectos/2.jpg";
+const Logo3 = "/src/assets/img_proyectos/3.jpg";
+const Logo4 = "/src/assets/img_proyectos/4.jpg";
+const Logo5 = "/src/assets/img_proyectos/5.jpg";
+const Logo6 = "/src/assets/img_proyectos/6.jpg";
+const Logo7 = "/src/assets/img_proyectos/7.jpg";
+const Logo8 = "/src/assets/img_proyectos/8.jpg";
+const Logo9 = "/src/assets/img_proyectos/9.jpg";
 
 interface Project {
   id: number;
   title: string;
   description: string;
-  image: string;
+  images: string[];
   progress: number;
 }
 
 const Projects: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-
+  const [currentImage, setCurrentImage] = useState(0); // Un solo estado para la imagen actual del proyecto seleccionado
   const projects: Project[] = [
     {
       id: 1,
-      title: "Restauración del Bosque Andino Patagónico",
-      description: "Un proyecto a largo plazo para reforestar áreas degradadas del bosque andino patagónico con especies nativas.",
-      image: "https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-      progress: 75
+      title: "Instalación de 400 Camara de Video 911 Paraná",
+      description: "Proyecto para mejorar la vigilancia y seguridad mediante la instalación de 400 cámaras de video en la ciudad de Paraná.",
+      images: [Logo1],
+      progress: 100
     },
     {
       id: 2,
-      title: "Protección del Huemul",
-      description: "Programa de conservación del huemul, un ciervo en peligro de extinción endémico de la Patagonia.",
-      image: "https://images.unsplash.com/photo-1484406566174-9da000fda645?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-      progress: 60
+      title: "Placa Control Remota",
+      description: "Dispositivo para monitoreo y control remoto de los grupos electrógenos (SBS).",
+      images: [Logo2, Logo3, Logo4, Logo5],
+      progress: 100
     },
     {
       id: 3,
-      title: "Limpieza de Costas Patagónicas",
-      description: "Iniciativa para limpiar y preservar las costas patagónicas, protegiendo la vida marina y los ecosistemas costeros.",
-      image: "https://images.unsplash.com/photo-1618477388954-7852f32655ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-      progress: 40
+      title: "Instalación de Fibra Optica Red GPON",
+      description: "Proyecto para la instalación de más de 170.000 metros de fibra óptica, mejorando la conectividad y velocidad de la red GPON.",
+      images: [Logo6, Logo7, Logo8, Logo9],
+      progress: 100
     },
   ];
 
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    
+    if (selectedProject) {
+      interval = setInterval(() => {
+        setCurrentImage((prevImage) => 
+          (prevImage + 1) % selectedProject.images.length
+        );
+      }, 3000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [selectedProject]);
+
   const openModal = (project: Project) => {
     setSelectedProject(project);
+    setCurrentImage(0); // Resetear la imagen actual al abrir el modal
   };
 
   const closeModal = () => {
     setSelectedProject(null);
+    setCurrentImage(0); // Resetear la imagen actual al cerrar el modal
   };
 
   return (
@@ -50,7 +80,7 @@ const Projects: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project) => (
           <div key={project.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            <img src={project.image} alt={project.title} className="w-full h-48 object-cover" />
+            <img src={project.images[0]} alt={project.title} className="w-full h-48 object-cover" />
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
               <p className="text-gray-600 mb-4">{project.description.substring(0, 100)}...</p>
@@ -78,7 +108,11 @@ const Projects: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-8 max-w-2xl w-full max-h-90vh overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">{selectedProject.title}</h2>
-            <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-64 object-cover mb-4 rounded" />
+            <img 
+              src={selectedProject.images[currentImage]} 
+              alt={selectedProject.title} 
+              className="w-full h-64 object-cover mb-4 rounded" 
+            />
             <p className="text-gray-700 mb-4">{selectedProject.description}</p>
             <div className="mb-4">
               <div className="bg-gray-200 rounded-full h-2">

@@ -25,11 +25,11 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({ camaras }) => {
       <h3 className="text-lg font-semibold mb-4 text-gray-100">Estadísticas Generales</h3>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <p className="text-sm text-gray-400">Total de Cámaras</p>
+          <p className="text-sm text-gray-400">Total de Clientes</p>
           <p className="text-xl font-bold text-gray-100">{stats.totalCamaras}</p>
         </div>
         <div>
-          <p className="text-sm text-gray-400">Cámaras Online</p>
+          <p className="text-sm text-gray-400">Clientes Online</p>
           <p className="text-xl font-bold text-gray-100">{stats.camarasOnline} ({stats.porcentajeOnline}%)</p>
         </div>
         <div>

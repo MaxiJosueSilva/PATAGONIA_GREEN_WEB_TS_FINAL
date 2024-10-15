@@ -13,8 +13,12 @@ const CameraArc: React.FC<CameraArcProps> = ({ camera }) => {
 
   const createArcPolygon = (range: number) => {
     const points = [];
-    const startAngle = pan - fov / 2;
-    const endAngle = pan + fov / 2;
+    let startAngle = pan - fov / 2;
+    let endAngle = pan + fov / 2;
+    if (pan === 0) {
+      startAngle = 0;
+      endAngle = 360;
+    }
     for (let angle = startAngle; angle <= endAngle; angle += 5) {
       const radian = angle * (Math.PI / 180);
       const x = lon + (range / 111320) * Math.cos(radian);

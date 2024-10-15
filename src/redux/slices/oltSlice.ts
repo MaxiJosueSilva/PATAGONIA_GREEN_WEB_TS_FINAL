@@ -17,7 +17,7 @@ export const fetch_Cliente_Onus = createAsyncThunk('olt/fetch_Cliente_onus', asy
 });
 
 export const rebootOnu = createAsyncThunk('olt/reboot_onu', async ({ onu, username }) => {
-    const response = await axios.post(`${API_CONFIG.baseUrl}/olt/reboot_onu`, { 
+    const response = await axios.post(`${API_CONFIG.baseUrlLocal}/olt/reboot_onu`, { 
         onu: onu,
         username: username
     }, {

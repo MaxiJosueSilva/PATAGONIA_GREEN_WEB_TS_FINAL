@@ -12,7 +12,7 @@ import ProtectedRoute from './components/Auth/ProtectedRoute';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import LoginForm from './components/Auth/LoginForm';
 import D3 from './components/NetworkVisualization/D3';
-import FormOnus from './components/Grupos/FormOnus';
+import FormOnus from './components/Onus/FormOnus';
 import NetworkTopology from './components/NetworkTopology';
 import Grupos from './components/Grupos/Grupos';
 import FormCamaras from './components/Cameras/FormCamaras';
