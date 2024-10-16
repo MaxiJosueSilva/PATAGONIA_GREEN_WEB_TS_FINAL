@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetch_Cliente_Onus } from '../../redux/slices/oltSlice';
 import { RootState, AppDispatch } from '../../redux/store';
@@ -14,6 +14,9 @@ import HeatmapLayer from './HeatmapLayer';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import './InteractiveMap.css';
+
+// Importar los datos estáticos de las fibras (coordenadas [lat, lng])
+import { FO96h, FO24h, FO12h } from './fibra_optica.js'; 
 
 interface Camara {
   idCamara?: string;
@@ -47,14 +50,31 @@ const InteractiveMap: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [visualization, setVisualization] = useState<string>('');
   const [selectedCamera, setSelectedCamera] = useState<Camara | null>(null);
-  const [mapType, setMapType] = useState("street"); // Estado para el tipo de mapa
+  const [mapType, setMapType] = useState("street");
   const [filterType, setFilterType] = useState<string>('');
   const [filterCapa, setFilterCapa] = useState<string>('');
   const staticCamaras = useSelector((state: RootState) => state.olt.onus as Camara[]);
   const status = useSelector((state: RootState) => state.olt.status);
   const error = useSelector((state: RootState) => state.olt.error);
-  
+  const [searchTerm, setSearchTerm] = useState('');
+  const mapRef = useRef<MapContainer | null>(null); 
+  // Estado para la visibilidad de las fibras
+  const [showFibra96h, setShowFibra96h] = useState(true);
+  const [showFibra24h, setShowFibra24h] = useState(true);
+  const [showFibra12h, setShowFibra12h] = useState(true);
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const MapController = () => {
+    const map = useMap();
+
+    // Asignar la referencia al MapContainer aquí
+    useEffect(() => {
+      mapRef.current = map.viewport; // Usar map.viewport para obtener el elemento del mapa
+    }, [map]); 
+
+    return null;
+  };
 
   const getMapUrl = () => {
     switch (mapType) {
@@ -66,6 +86,7 @@ const InteractiveMap: React.FC = () => {
         return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     }
   };
+
   const startTimer = () => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
@@ -73,6 +94,28 @@ const InteractiveMap: React.FC = () => {
     timerRef.current = setTimeout(() => {
       setSelectedCamera(null);
     }, 20000);
+  };
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const searchTermStr = searchTerm.toString().toLowerCase();
+    const foundCamera = filteredCamaras.find(
+      (camera) => {
+        if (camera.name) {
+          const cameraName = camera.name.toString().toLowerCase();
+          return cameraName.includes(searchTermStr);
+        }
+        return false;
+      }
+    );
+
+    if (foundCamera && foundCamera.lat !== undefined && foundCamera.lon !== undefined) {
+      // Asumiendo que mapRef.current es ahora la referencia al MapContainer de Leaflet
+      (mapRef.current as any).leafletElement.setView([foundCamera.lat, foundCamera.lon], 18);
+      setSelectedCamera(foundCamera);
+    } else {
+      alert('Cámara no encontrada o sin coordenadas válidas');
+    }
   };
 
   useEffect(() => {
@@ -167,14 +210,49 @@ const InteractiveMap: React.FC = () => {
   const uniqueTipos = Array.from(new Set(staticCamaras.map(c => c.tipo)));
   const uniqueCapas = Array.from(new Set(staticCamaras.map(c => c.capa)));
 
+  // Función para renderizar las fibras ópticas (usando Polyline de Leaflet)
+  const renderFibras = () => {
+    return (
+      <>
+        {showFibra96h && FO96h.map((fibra: any) => (
+          <Polyline key={fibra.name} positions={fibra.coordinates} pathOptions={{ color: fibra.color, weight: parseFloat(fibra.weight) }} /> // Cambiar "weidth" a "weight"
+        ))}
+        {showFibra24h && FO24h.map((fibra: any) => (
+          <Polyline key={fibra.name} positions={fibra.coordinates} pathOptions={{ color: fibra.color, weight: parseFloat(fibra.weight) }} /> // Cambiar "weidth" a "weight"
+        ))}
+        {showFibra12h && FO12h.map((fibra: any) => (
+          <Polyline key={fibra.name} positions={fibra.coordinates} pathOptions={{ color: fibra.color, weight: parseFloat(fibra.weight) }} /> // Cambiar "weidth" a "weight"
+        ))}
+      </>
+    );
+  };
+
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col" style={{ height: 'calc(110vh - 100px - 100px)' }}>
       <AlertBanner camaras={staticCamaras} />
       <div className="flex flex-1 relative">
+        {/* Tabla de filtros */}
         <div className="w-1/6 p-4 bg-gray-800 overflow-y-auto">
           <h2 className="text-xl font-bold mb-4 text-white">Filtros y Visualización</h2>
 
-          {/* Selector para tipo de mapa */}
+          {/* Buscador de cámaras */}
+          <div className="mb-4">
+            <label className="block mb-2 text-white">Buscar Cámara:</label>
+            <form onSubmit={handleSearch} className="flex">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Nombre de la cámara..."
+                className="w-full p-2 border rounded-l bg-gray-700 text-white"
+              />
+              <button type="submit" className="p-2 bg-blue-500 text-white rounded-r">
+                Buscar
+              </button>
+            </form>
+          </div>
+
+          {/* Selector de tipo de mapa */}
           <div className="mb-4">
             <label className="block mb-2 text-white">Tipo de Mapa:</label>
             <select
@@ -188,6 +266,7 @@ const InteractiveMap: React.FC = () => {
             </select>
           </div>
 
+          {/* Selector de visualización */}
           <div className="mb-4">
             <label className="block mb-2 text-white">Visualización:</label>
             <select
@@ -203,6 +282,7 @@ const InteractiveMap: React.FC = () => {
             </select>
           </div>
 
+          {/* Filtro por tipo */}
           <div className="mb-4">
             <label className="block mb-2 text-white">Filtrar por Tipo:</label>
             <select
@@ -217,6 +297,7 @@ const InteractiveMap: React.FC = () => {
             </select>
           </div>
 
+          {/* Filtro por capa */}
           <div className="mb-4">
             <label className="block mb-2 text-white">Filtrar por Capa:</label>
             <select
@@ -231,15 +312,54 @@ const InteractiveMap: React.FC = () => {
             </select>
           </div>
 
+          {/* Checkbox para mostrar fibras */}
+          <div className="mb-4">
+            <label className="block mb-2 text-white">Mostrar Fibras:</label>
+            <div className="flex"> {/* Agregar clase "flex" */}
+              <div className="mr-4"> {/* Agregar margen derecho para separar los checkboxes */}
+                <input
+                  type="checkbox"
+                  id="fibra96h"
+                  checked={showFibra96h}
+                  onChange={() => setShowFibra96h(!showFibra96h)}
+                />
+                <label htmlFor="fibra96h" className="ml-2 text-white">F.O. 96 H</label>
+              </div>
+              <div className="mr-4"> {/* Agregar margen derecho para separar los checkboxes */}
+                <input
+                  type="checkbox"
+                  id="fibra24h"
+                  checked={showFibra24h}
+                  onChange={() => setShowFibra24h(!showFibra24h)}
+                />
+                <label htmlFor="fibra24h" className="ml-2 text-white">F.O. 24 H</label>
+              </div>
+              <div> {/* No es necesario margen derecho en el último checkbox */}
+                <input
+                  type="checkbox"
+                  id="fibra12h"
+                  checked={showFibra12h}
+                  onChange={() => setShowFibra12h(!showFibra12h)}
+                />
+                <label htmlFor="fibra12h" className="ml-2 text-white">F.O. 12 H</label>
+              </div>
+            </div>
+          </div>
+
           <DashboardStats camaras={filteredCamaras} />
         </div>
 
-        <div className="w-5/6 relative">
-          <MapContainer center={[-31.7333, -60.5233]} zoom={13} className="map-container">
+        {/* Mapa */}
+        <div className="w-5/6 relative" ref={mapRef}>
+          {/* Mapa de Leaflet (contiene las fibras y las cámaras) */}
+          <MapContainer center={[-31.7333, -60.5233]} zoom={13} className="map-container" >
+            <MapController />
             <TileLayer
               url={getMapUrl()}
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
+
+            {/* Marcadores de las cámaras */}
             {filteredCamaras.map((camara) => {
               const hasValidCoords = camara.lat != null && camara.lon != null;
               const keyPrefix = camara.idCamara
@@ -276,6 +396,7 @@ const InteractiveMap: React.FC = () => {
               );
             })}
 
+            {/* Heatmap */}
             {visualization === 'temp_cpu' && (
               <HeatmapLayer
                 points={getHeatmapPoints()}
@@ -283,27 +404,31 @@ const InteractiveMap: React.FC = () => {
               />
             )}
 
+            {/* Renderizar las fibras ópticas */}
+            {renderFibras()} 
+
             <MapLegend visualization={visualization} />
           </MapContainer>
-          
+
+          {/* Panel lateral de la cámara seleccionada */}
           {selectedCamera && (
-            <div 
+            <div
               className="right-panel show"
               onMouseMove={handlePanelInteraction}
               onTouchStart={handlePanelInteraction}
             >
               <div className="panel-content">
-                <button 
-                  className="close-button" 
+                <button
+                  className="close-button"
                   onClick={() => setSelectedCamera(null)}
                 >
-                  &times;
+                  ×
                 </button>
                 <Video key={`video-${selectedCamera.ip}`} camaraip={selectedCamera.ip} />
                 {selectedCamera.onu && (
-                  <ONUData 
-                    key={`onu-${selectedCamera.idCamara || selectedCamera.idComisaria || selectedCamera.idCliente || selectedCamera.idPredio}`} 
-                    data={selectedCamera.onu} 
+                  <ONUData
+                    key={`onu-${selectedCamera.idCamara || selectedCamera.idComisaria || selectedCamera.idCliente || selectedCamera.idPredio}`}
+                    data={selectedCamera.onu}
                   />
                 )}
                 <div key={`details-${selectedCamera.idCamara || selectedCamera.idComisaria || selectedCamera.idCliente || selectedCamera.idPredio}`}>
@@ -318,16 +443,17 @@ const InteractiveMap: React.FC = () => {
             </div>
           )}
 
+          {/* Panel inferior de la cámara seleccionada */}
           {selectedCamera && (
-            <div 
+            <div
               className="bottom-panel show"
               onMouseMove={handlePanelInteraction}
               onTouchStart={handlePanelInteraction}
             >
               <div className="panel-content">
-                <HistorialCamaraChart 
-                  key={`chart-${selectedCamera.idCamara || selectedCamera.idComisaria || selectedCamera.idCliente || selectedCamera.idPredio}`} 
-                  camaraId={selectedCamera.idCamara || selectedCamera.idComisaria || selectedCamera.idCliente || selectedCamera.idPredio || ''} 
+                <HistorialCamaraChart
+                  key={`chart-${selectedCamera.idCamara || selectedCamera.idComisaria || selectedCamera.idCliente || selectedCamera.idPredio}`}
+                  camaraId={selectedCamera.idCamara || selectedCamera.idComisaria || selectedCamera.idCliente || selectedCamera.idPredio || ''}
                 />
               </div>
             </div>

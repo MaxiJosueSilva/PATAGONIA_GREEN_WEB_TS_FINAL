@@ -9,7 +9,7 @@ const AlertBanner: React.FC<AlertBannerProps> = ({ camaras }) => {
     return camaras.filter(camara => {
       const temp = parseInt(camara.onu?.system?.temps?.cpu || '0');
       const rx = parseFloat(camara.onu?.optics?.rx_power_onu || '0');
-      return temp > 60 || rx < -25 || camara.onu?.online === 'false';
+      return temp > 70 || rx < -28 || camara.onu?.online === 'false';
     });
   }, [camaras]);
 

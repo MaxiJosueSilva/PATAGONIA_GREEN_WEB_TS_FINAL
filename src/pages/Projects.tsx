@@ -20,7 +20,8 @@ interface Project {
 
 const Projects: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [currentImage, setCurrentImage] = useState(0); // Un solo estado para la imagen actual del proyecto seleccionado
+  const [currentImage, setCurrentImage] = useState(0);
+  
   const projects: Project[] = [
     {
       id: 1,
@@ -47,8 +48,8 @@ const Projects: React.FC = () => {
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-    
-    if (selectedProject) {
+
+    if (selectedProject && selectedProject.images.length > 1) {
       interval = setInterval(() => {
         setCurrentImage((prevImage) => 
           (prevImage + 1) % selectedProject.images.length
@@ -65,12 +66,12 @@ const Projects: React.FC = () => {
 
   const openModal = (project: Project) => {
     setSelectedProject(project);
-    setCurrentImage(0); // Resetear la imagen actual al abrir el modal
+    setCurrentImage(0);
   };
 
   const closeModal = () => {
     setSelectedProject(null);
-    setCurrentImage(0); // Resetear la imagen actual al cerrar el modal
+    setCurrentImage(0);
   };
 
   return (
@@ -108,11 +109,16 @@ const Projects: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-8 max-w-2xl w-full max-h-90vh overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">{selectedProject.title}</h2>
-            <img 
-              src={selectedProject.images[currentImage]} 
-              alt={selectedProject.title} 
-              className="w-full h-64 object-cover mb-4 rounded" 
-            />
+            <div className="relative h-64 mb-4">
+              {selectedProject.images.map((image, index) => (
+                <img 
+                  key={index}
+                  src={image} 
+                  alt={`${selectedProject.title} - Image ${index + 1}`} 
+                  className={`absolute w-full h-full object-cover rounded transition-opacity duration-500 ${index === currentImage ? 'opacity-100' : 'opacity-0'}`}
+                />
+              ))}
+            </div>
             <p className="text-gray-700 mb-4">{selectedProject.description}</p>
             <div className="mb-4">
               <div className="bg-gray-200 rounded-full h-2">

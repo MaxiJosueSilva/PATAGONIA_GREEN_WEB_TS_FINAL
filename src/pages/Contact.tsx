@@ -90,15 +90,15 @@ const Contact: React.FC = () => {
           <div className="space-y-4">
             <p>
               <strong>Dirección:</strong><br />
-              Av. de la Conservación 123<br />
-              El Calafate, Santa Cruz<br />
+              Presbitero Grella 1045<br />
+              Paraná, Entre Rios<br />
               Argentina
             </p>
             <p>
-              <strong>Teléfono:</strong> +54 2902 123456
+              <strong>Teléfono:</strong> +54 3442533581
             </p>
             <p>
-              <strong>Email:</strong> info@patagoniagreen.org
+              <strong>Email:</strong> msilva@patagoniagreen.com
             </p>
           </div>
           

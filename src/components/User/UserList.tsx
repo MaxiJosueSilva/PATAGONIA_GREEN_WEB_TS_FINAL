@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUsers, addUser, updateUser, deleteUser } from '../../redux/slices/userSlice';
+import bcrypt from 'bcryptjs';
 import './User.css';
 
 const UserList: React.FC = () => {
@@ -28,7 +29,10 @@ const UserList: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const userData = { ...formData };
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(formData.password, salt);
+
+        const userData = { ...formData, password: hashedPassword };
 
         if (editIndex !== null) {
             const updatedUser = { ...users[editIndex], ...userData };

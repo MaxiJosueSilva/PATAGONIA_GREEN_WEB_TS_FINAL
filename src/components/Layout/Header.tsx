@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Leaf, ChevronDown, Map, Menu, X, Users } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+const PatagoniaLogo = "/src/assets/Patagonia.png";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -43,10 +44,11 @@ const Header: React.FC = () => {
   }, [location]);
 
   return (
-    <header className="bg-gray-900 text-white p-4 shadow-md">
+    <header className="bg-gray-900 text-white p-4 shadow-md" style={{ position: 'relative', zIndex: 1001 }}>
+      
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="flex items-center space-x-2">
-          <Leaf size={32} className="text-blue-400" />
+          <img src={PatagoniaLogo} alt="Patagonia Green" className="w-8 h-8 text-blue-400" />
           <span className="text-xl font-bold text-blue-300">Patagonia Green</span>
         </Link>
         <div className="md:hidden">
@@ -57,9 +59,6 @@ const Header: React.FC = () => {
         <nav className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:block absolute md:relative top-16 left-0 right-0 md:top-0 bg-gray-900 md:bg-transparent z-40`}>
           <ul className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 p-4 md:p-0">
             <li><Link to="/" className="hover:text-blue-300 transition-colors">Inicio</Link></li>
-            <li><Link to="/projects" className="hover:text-blue-300 transition-colors">Proyectos</Link></li>
-            <li><Link to="/news" className="hover:text-blue-300 transition-colors">Noticias</Link></li>
-            <li><Link to="/contact" className="hover:text-blue-300 transition-colors">Contacto</Link></li>
             {isAuthenticated && (
               <>
                 <li>
@@ -112,6 +111,10 @@ const Header: React.FC = () => {
             {!isAuthenticated && (
               <li><Link to="/login" className="hover:text-blue-300 transition-colors">Iniciar sesión</Link></li>
             )}
+            <li><Link to="/projects" className="hover:text-blue-300 transition-colors">Proyectos</Link></li>
+            {/* <li><Link to="/news" className="hover:text-blue-300 transition-colors">Noticias</Link></li> */}
+            <li><Link to="/contact" className="hover:text-blue-300 transition-colors">Contacto</Link></li>
+            <li><Link to="/about" className="hover:text-blue-300 transition-colors">Acerca de</Link></li>
           </ul>
         </nav>
       </div>

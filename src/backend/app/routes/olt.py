@@ -49,6 +49,12 @@ def reset_onus():
                 for intento in range(3):
                     resultado = api.reboot_onu(onu_serial)
                     time.sleep(1)  # Esperar 1 segundo entre intentos
+                print(f"Reinicio realizado por {user}")
+                # Guardar los datos en la base de datos
+                fecha_reinicio = datetime.datetime.now()
+                db = current_app.db
+                db.execute("INSERT INTO reinicios_onu (fecha, usuario, numero_onu) VALUES (?, ?, ?)", (fecha_reinicio, user, onu_serial))
+                db.commit()
             except Exception as e:
                 print(f"Error al reiniciar la ONU: {e}")
                 print(f"ALARMA: Excepción al intentar reiniciar la ONU {onu_serial}")

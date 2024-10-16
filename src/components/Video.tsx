@@ -6,6 +6,7 @@ interface VideoProps {
 
 const Video: React.FC<VideoProps> = ({ camaraip }) => {
   const [videoUrl, setVideoUrl] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (camaraip) {
@@ -16,6 +17,23 @@ const Video: React.FC<VideoProps> = ({ camaraip }) => {
       setVideoUrl(url);
     }
   }, [camaraip]);
+
+  useEffect(() => {
+    const checkVideoLoad = () => {
+      const videoElement = document.createElement('img');
+      videoElement.onload = () => {
+        setError('');
+      };
+      videoElement.onerror = () => {
+        setError('Error al cargar el video.');
+      };
+      videoElement.src = videoUrl;
+    };
+
+    if (videoUrl) {
+      checkVideoLoad();
+    }
+  }, [videoUrl]);
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
@@ -28,6 +46,7 @@ const Video: React.FC<VideoProps> = ({ camaraip }) => {
       ) : (
         <p>Cargando video...</p>
       )}
+      {error && <p>{error}</p>}
     </div>
   );
 };

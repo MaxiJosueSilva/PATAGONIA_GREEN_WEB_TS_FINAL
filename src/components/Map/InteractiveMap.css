@@ -1,3 +1,5 @@
+
+
 .map-container {
   height: 100%;
   width: 100%;
@@ -19,6 +21,12 @@
 
 .right-panel.show {
   right: 0;
+}
+
+.custom-icon img {
+  width: auto; /* o un tamaño fijo */
+  height: 32px; /* ajustar según sea necesario */
+  max-width: 100%; /* no sobrepase el contenedor */
 }
 
 .bottom-panel {

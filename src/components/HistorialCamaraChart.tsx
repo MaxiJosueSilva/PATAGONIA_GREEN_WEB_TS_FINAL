@@ -58,7 +58,7 @@ const HistorialCamaraChart: React.FC<HistorialCamaraChartProps> = ({ camaraId })
   };
 
   return (
-    <div style={{ height: '200px', width: '100%' }}>
+    <div style={{ height: '150px', width: '100%' }}>
       <Line data={chartData} options={options} />
     </div>
   );
