@@ -1,74 +1,66 @@
-
-/* App.css */
-.container-camaras {
-  width: 100vw;
-  height: 100vh;
-  padding: 10px;
-  overflow: auto;
+/* Asegura que estos estilos prevalezcan */
+.custom-dark-table thead.custom-header th {
+  background-color: black !important;  /* Forzar el color de fondo negro */
+  color: white !important;              /* Forzar el color del texto blanco */
+  font-weight: bold !important;         /* Forzar negrita */
+  padding: 10px !important;             /* Asegurar el relleno */
+  text-align: center !important;        /* Forzar alineación al centro */
 }
-
-.form-container {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #ffffff;
-  border-radius: 5px;
-}
-
-.form-container h2 {
-  text-align: center;
-}
-
-.form-container .btn {
-  width: 100%;
-}
-
-.table-container {
-  margin-top: 20px;
-  overflow: auto;
-}
-
-.table-container table {
+/* Estilos personalizados para una tabla de tema oscuro */
+.custom-dark-table {
   width: 100%;
   border-collapse: collapse;
+  background-color: #333333; /* Color de fondo oscuro */
+  color: #ffffff; /* Texto claro */
 }
 
-.table-container th, .table-container td {
-  padding: 10px;
+.custom-dark-table th, 
+.custom-dark-table td {
+  border: 1px solid #444444; /* Bordes más oscuros */
+  padding: 12px; /* Espaciado en las celdas */
   text-align: left;
 }
 
-.table-container th {
-  background-color: #ffffff;
+.custom-dark-table th {
+  background-color: #000000; /* Fondo negro para los encabezados */
+  color: #ffffff; /* Texto en blanco */
+  font-weight: bold; /* Texto en negrita */
 }
 
-.table-container tr:nth-child(even) {
-  background-color: #ffffff;
+.custom-dark-table tbody tr:nth-child(even) {
+  background-color: #333333; /* Color de filas pares (sin zebra) */
 }
 
-.table-container tr:hover {
-  background-color: #ffffff;
+.custom-dark-table tbody tr:hover {
+  background-color: #555555; /* Efecto hover para filas */
 }
 
-/* Asegura que las celdas tengan texto visible */
-td, th {
-  color: #000; /* Cambia a un color que sea visible en el fondo */
+.custom-header th {
+  background-color: black; /* Fondo negro */
+  color: white; /* Texto blanco */
+  font-weight: bold; /* Texto en negrita */
+  padding: 10px; /* Añade espacio extra para separación */
+  text-align: center; /* Alineación central */
 }
-/* Asegura que el fondo de las celdas no sea blanco o que contraste con el texto */
-table {
-  background-color: #fff; /* Fondo blanco */
-}
-
-tr {
-  background-color: #ffffff; /* Color alternativo para las filas */
-}
-
-thead {
-  background-color: #2a148d; /* Fondo para el encabezado */
+.custom-dark-table caption {
+  color: #ffffff;
+  font-size: 1.5em;
+  padding: 10px;
+  text-align: center;
 }
 
-@media (max-width: 768px) {
-  .table-responsive {
-    max-height: none;
-  }
+/* Estilo para la fila de búsqueda */
+.search-row {
+  margin-bottom: 20px; /* Espaciado entre la fila buscador y la tabla */
+}
+
+/* Estilo para el input del buscador */
+.search-input {
+  padding: 8px;
+  font-size: 1em;
+  width: 100%;
+  max-width: 300px; /* Limitar el ancho del input */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: auto; /* Centrar el input en la pantalla */
 }

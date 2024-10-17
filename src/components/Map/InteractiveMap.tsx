@@ -65,6 +65,7 @@ const InteractiveMap: React.FC = () => {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  
   const MapController = () => {
     const map = useMap();
 

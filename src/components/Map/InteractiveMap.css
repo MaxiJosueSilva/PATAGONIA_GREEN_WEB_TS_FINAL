@@ -1,12 +1,43 @@
-
-
+/* Estilos base */
 .map-container {
   height: 100%;
   width: 100%;
+  /* transform: scaleX(1.15); */
   position: relative;
   overflow: hidden;
+
 }
 
+.custom-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.custom-icon i {
+  font-size: 18px;
+}
+
+.custom-icon img {
+  width: auto;
+  height: 32px;
+  max-width: 100%;
+}
+
+/* Panel de filtros */
+.filters-panel {
+  width: 16.666667%; /* w-1/6 */
+  padding: 1rem;
+  background-color: rgb(31, 41, 55);
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+/* Panel derecho */
 .right-panel {
   position: absolute;
   top: 0;
@@ -23,12 +54,7 @@
   right: 0;
 }
 
-.custom-icon img {
-  width: auto; /* o un tamaño fijo */
-  height: 32px; /* ajustar según sea necesario */
-  max-width: 100%; /* no sobrepase el contenedor */
-}
-
+/* Panel inferior */
 .bottom-panel {
   position: absolute;
   bottom: -20%;
@@ -45,6 +71,7 @@
   bottom: 0;
 }
 
+/* Contenido de los paneles */
 .panel-content {
   padding: 1rem;
   color: white;
@@ -61,26 +88,89 @@
   cursor: pointer;
 }
 
-.visualization-select {
-  width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  background-color: #4a5568;
-  color: white;
-  border: 1px solid #718096;
-  border-radius: 0.25rem;
+/* Estilos para móviles (hasta 768px) */
+@media screen and (max-width: 768px) {
+  .filters-panel {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    height: 100%;
+    z-index: 2000;
+  }
+
+  .filters-panel.show {
+    left: 0;
+  }
+
+  .filters-toggle {
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+    background-color: rgb(31, 41, 55);
+    padding: 0.5rem;
+    border-radius: 4px;
+    color: white;
+  }
+
+  .right-panel {
+    width: 100%;
+    right: -100%;
+  }
+
+  .right-panel.show {
+    right: 0;
+  }
+
+  .bottom-panel {
+    width: 100%;
+    height: 30%;
+    bottom: -30%;
+  }
+
+  .bottom-panel.show {
+    bottom: 0;
+  }
+
+  .map-container {
+    height: calc(100vh - 56px); /* Ajustar altura considerando la barra de navegación */
+  }
 }
 
-.custom-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.5);
+/* Estilos para tablets (768px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .filters-panel {
+    width: 25%;
+  }
+
+  .right-panel {
+    width: 50%;
+    right: -50%;
+  }
+
+  .bottom-panel {
+    width: 75%;
+    height: 25%;
+  }
 }
 
-.custom-icon i {
-  font-size: 18px;
+/* Animaciones */
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-out;
 }

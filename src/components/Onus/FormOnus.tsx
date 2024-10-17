@@ -131,55 +131,56 @@ const FormOnus: React.FC = () => {
                     <div className="table-container">
                         <h1>ONUs</h1>
                         <InputGroup className="mb-3" style={{ maxWidth: '500px', margin: '0 auto', alignItems: 'center' }}>
-							<InputGroup.Text style={{ width: '100px', backgroundColor: 'transparent', color: 'gray', border: 'none', paddingRight: '10px', fontSize: '1.2em' }}>
-								Buscador:
-							</InputGroup.Text>
-							<Form.Control
-								style={{ height: '38px', width: 'calc(100% - 110px)' }} // Ajusta la altura y el ancho
-								placeholder="Buscar ONUs..."
-								value={searchTerm}
-								onChange={handleSearch}
-							/>
+                        {/* Fila de búsqueda */}
+                        <div className="search-row">
+                            <input
+                            type="text"
+                            className="search-input"
+                            placeholder="Buscar..."
+                            value={searchTerm}
+                            onChange={handleSearch}
+                            />
+                        </div>
 						</InputGroup>
                         <div className="table-responsive">
-                            <Table striped bordered hover>
-                                <thead>
-                                    <tr>
-                                        <th onClick={() => handleSort('serial_number')}>
-                                            Número de Serie {sortField === 'serial_number' && sortOrder === 'asc' ? '⬆' : '⬇'}
-                                        </th>
-                                        <th onClick={() => handleSort('name')}>
-                                            Nombre {sortField === 'name' && sortOrder === 'asc' ? '⬆' : '⬇'}
-                                        </th>
-                                        <th onClick={() => handleSort('olt')}>
-                                            Olt {sortField === 'olt' && sortOrder === 'asc' ? '⬆' : '⬇'}
-                                        </th>
-                                        <th onClick={() => handleSort('mac_address')}>
-                                            Dirección MAC {sortField === 'mac_address' && sortOrder === 'asc' ? '⬆' : '⬇'}
-                                        </th>
-                                        <th onClick={() => handleSort('firmware_version')}>
-                                            Versión de Firmware {sortField === 'firmware_version' && sortOrder === 'asc' ? '⬆' : '⬇'}
-                                        </th>
-                                        <th onClick={() => handleSort('connection_time')}>
-                                            Tiempo Conexion {sortField === 'connection_time' && sortOrder === 'asc' ? '⬆' : '⬇'}
-                                        </th>
-                                        <th onClick={() => handleSort('online')}>
-                                            En línea {sortField === 'online' && sortOrder === 'asc' ? '⬆' : '⬇'}
-                                        </th>
-                                        <th onClick={() => handleSort('optics?.tx_power_onu')}>
-                                            Tx {sortField === 'optics?.tx_power_onu' && sortOrder === 'asc' ? '⬆' : '⬇'}
-                                        </th>
-                                        <th onClick={() => handleSort('optics?.rx_power_onu')}>
-                                            Rx {sortField === 'optics?.rx_power_onu' && sortOrder === 'asc' ? '⬆' : '⬇'}
-                                        </th>
-                                        <th onClick={() => handleSort('distance')}>
-                                            Distancia {sortField === 'distance' && sortOrder === 'asc' ? '⬆' : '⬇'}
-                                        </th>
-                                        <th>Puertos</th>
-                                        <th>Reiniciar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>{content}</tbody>
+                        <Table className="custom-dark-table" bordered hover>
+                            <thead className="custom-header"> {/* Añadimos la clase custom-header */}
+                                <tr>
+                                <th onClick={() => handleSort('serial_number')}>
+                                    Número de Serie {sortField === 'serial_number' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                </th>
+                                <th onClick={() => handleSort('name')}>
+                                    Nombre {sortField === 'name' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                </th>
+                                <th onClick={() => handleSort('olt')}>
+                                    Olt {sortField === 'olt' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                </th>
+                                <th onClick={() => handleSort('mac_address')}>
+                                    Dirección MAC {sortField === 'mac_address' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                </th>
+                                <th onClick={() => handleSort('firmware_version')}>
+                                    Versión de Firmware {sortField === 'firmware_version' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                </th>
+                                <th onClick={() => handleSort('connection_time')}>
+                                    Tiempo Conexión {sortField === 'connection_time' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                </th>
+                                <th onClick={() => handleSort('online')}>
+                                    En línea {sortField === 'online' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                </th>
+                                <th onClick={() => handleSort('optics?.tx_power_onu')}>
+                                    Tx {sortField === 'optics?.tx_power_onu' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                </th>
+                                <th onClick={() => handleSort('optics?.rx_power_onu')}>
+                                    Rx {sortField === 'optics?.rx_power_onu' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                </th>
+                                <th onClick={() => handleSort('distance')}>
+                                    Distancia {sortField === 'distance' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                </th>
+                                <th>Puertos</th>
+                                <th>Reiniciar</th>
+                                </tr>
+                            </thead>
+                            <tbody>{content}</tbody>
                             </Table>
                         </div>
                     </div>
@@ -254,13 +255,12 @@ const OnuRow = React.memo(({ onu, handleOpenModal }) => {
 				</table>
 				</td>
             <td>
-                <Button
-                    variant="danger"
-                    onClick={() => handleOpenModal(onu)}
-                    style={{ backgroundColor: '#FF4136', borderColor: '#FF4136' }}
-                >
-                    Reiniciar
-                </Button>
+            <Button
+                variant="danger" 
+                onClick={() => handleOpenModal(onu)}
+            >
+                Reiniciar
+            </Button>
             </td>
         </tr>
     );

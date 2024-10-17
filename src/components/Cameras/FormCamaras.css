@@ -1,10 +1,12 @@
-.container-user {
+/* Estilos personalizados para el contenedor de cámaras */
+.camara-container {
   display: flex;
   justify-content: space-between;
   gap: 20px;
 }
 
-.form-container, .table-container {
+/* Estilo para formularios y tablas dentro del contenedor */
+.camara-form-container, .camara-table-container {
   flex: 1;
   background-color: #ffffff;
   padding: 20px;
@@ -12,29 +14,38 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.table-responsive {
+/* Hacer la tabla desplazable verticalmente */
+.camara-table-responsive {
   max-height: 600px;
   overflow-y: auto;
 }
 
+/* Adaptación para dispositivos móviles */
 @media (max-width: 768px) {
-  .container-user {
+  .camara-container {
     flex-direction: column;
+  }
+
+  /* Ajusta el ancho de los inputs en pantallas pequeñas */
+  .camara-form-container .col-md-4, 
+  .camara-form-container .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
   }
 }
 
-/* Asegurarse de que el texto en las tablas sea visible */
-.table-responsive table {
+/* Asegurar la visibilidad del texto dentro de las tablas */
+.camara-table-responsive table {
   color: #333;
 }
 
 /* Estilos para los botones en las tablas */
-.table-responsive button {
+.camara-table-responsive button {
   color: #fff;
 }
 
 /* Estilos globales para formularios */
-input, select, textarea {
+.camara-input, .camara-select, .camara-textarea {
   color: #333;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -42,35 +53,36 @@ input, select, textarea {
   padding: 8px;
 }
 
-label {
+/* Estilo de las etiquetas */
+.camara-label {
   color: #333;
   margin-bottom: 8px;
   display: block;
 }
 
-/* Ajuste para el modo oscuro si es necesario */
+/* Ajustes para el modo oscuro */
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #1a202c;
     color: #e2e8f0;
   }
 
-  .form-container, .table-container {
+  .camara-form-container, .camara-table-container {
     background-color: #2d3748;
     color: #e2e8f0;
   }
 
-  input, select, textarea {
+  .camara-input, .camara-select, .camara-textarea {
     background-color: #4a5568;
     color: #e2e8f0;
     border-color: #718096;
   }
 
-  label {
+  .camara-label {
     color: #e2e8f0;
   }
 
-  .table-responsive table {
+  .camara-table-responsive table {
     color: #e2e8f0;
   }
 }
