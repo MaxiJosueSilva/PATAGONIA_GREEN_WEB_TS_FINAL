@@ -11,7 +11,8 @@ import Contact from './pages/Contact';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import LoginForm from './components/Auth/LoginForm';
-import D3 from './components/NetworkVisualization/D3';
+import D3 from './components/D3/D3';
+import D3_Arbol from './components/D3_Arbol/D3_Arbol';
 import FormOnus from './components/Onus/FormOnus';
 import NetworkTopology from './components/NetworkTopology';
 import Grupos from './components/Grupos/Grupos';
@@ -33,6 +34,7 @@ const App: React.FC = () => {
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
           <Route path="/map" element={<ProtectedRoute minLevel={5}><InteractiveMap /></ProtectedRoute>} />
           <Route path="/d3" element={<ProtectedRoute minLevel={5}><D3 /></ProtectedRoute>} />
+          <Route path="/d3_arbol" element={<ProtectedRoute minLevel={5}><D3_Arbol /></ProtectedRoute>} />
           <Route path="/onus" element={<ProtectedRoute minLevel={5}><FormOnus /></ProtectedRoute>} />
           <Route path="/network-topology" element={<ProtectedRoute minLevel={5}><NetworkTopology /></ProtectedRoute>} />
           <Route path="/grupos" element={<ProtectedRoute minLevel={5}><Grupos /></ProtectedRoute>} />

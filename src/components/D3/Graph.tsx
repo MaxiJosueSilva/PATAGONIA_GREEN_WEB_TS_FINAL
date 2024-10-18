@@ -22,94 +22,112 @@ const Graph: React.FC<GraphProps> = ({ nodes, links }) => {
 
   useEffect(() => {
     if (!svgRef.current || nodes.length === 0 || links.length === 0) return;
-
+  
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove(); // Clear previous render
-
+  
     const width = svgRef.current.clientWidth;
     const height = svgRef.current.clientHeight;
-
-    // Create new objects for nodes and links to ensure they are extensible
+  
+    // Grupo que contendrá nodos, enlaces y etiquetas
+    const graphGroup = svg.append('g');
+  
     const nodesCopy = nodes.map(node => ({...node}));
     const linksCopy = links.map(link => ({...link}));
-
-    // Create the simulation with nodesCopy
+  
+    // Simulación de fuerza
     const simulation = d3.forceSimulation(nodesCopy as d3.SimulationNodeDatum[])
       .force('link', d3.forceLink(linksCopy).id((d: any) => d.id))
-      .force('charge', d3.forceManyBody().strength(-100))
+      .force('charge', d3.forceManyBody().strength(-50))  // Ajuste la fuerza para que los nodos no se superpongan
       .force('center', d3.forceCenter(width / 2, height / 2));
-
+  
     const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-    // Draw the links
-    const link = svg.append('g')
+  
+    // Dibujar enlaces
+    const link = graphGroup.append('g')
       .selectAll('line')
       .data(linksCopy)
       .join('line')
       .attr('stroke', '#999')
       .attr('stroke-opacity', 0.6)
       .attr('stroke-width', d => Math.sqrt(d.value));
-
-    // Draw the nodes
-    const node = svg.append('g')
+  
+    // Dibujar nodos
+    const node = graphGroup.append('g')
       .selectAll('circle')
       .data(nodesCopy)
       .join('circle')
       .attr('r', 5)
       .attr('fill', (d: any) => color(d.group.toString()))
       .call(drag(simulation) as any);
-
-    // Add labels to the nodes
-    const labels = svg.append('g')
-      .selectAll('text')
-      .data(nodesCopy)
-      .join('text')
-      .attr('dx', 12)
-      .attr('dy', '.35em')
-      .text((d: any) => d.id);
-
-    // Update positions on each tick of the simulation
+  
+    // Dibujar etiquetas de nodos
+    const labels = graphGroup.append('g')
+    .selectAll('text')
+    .data(nodesCopy)
+    .join('text')
+    .attr('dx', 12)
+    .attr('dy', '.35em')
+    .text((d: any) => {
+      // Verificamos que 'd.id' sea un string válido
+      if (typeof d.id === 'string') {
+        return d.id.length > 10 ? `${d.id.slice(0, 10)}...` : d.id;
+      } else {
+        return ''; // Si no es un string, no mostramos nada o puedes mostrar un texto alternativo
+      }
+    });
+    
+    // Actualización en cada tick de la simulación
     simulation.on('tick', () => {
       link
         .attr('x1', (d: any) => d.source.x)
         .attr('y1', (d: any) => d.source.y)
         .attr('x2', (d: any) => d.target.x)
         .attr('y2', (d: any) => d.target.y);
-
+  
       node
         .attr('cx', (d: any) => d.x)
         .attr('cy', (d: any) => d.y);
-
+  
       labels
         .attr('x', (d: any) => d.x)
         .attr('y', (d: any) => d.y);
     });
-
-    // Drag function
+  
+    // Función de arrastre
     function drag(simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>) {
       function dragstarted(event: any, d: any) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         d.fx = d.x;
         d.fy = d.y;
       }
-
+  
       function dragged(event: any, d: any) {
         d.fx = event.x;
         d.fy = event.y;
       }
-
+  
       function dragended(event: any, d: any) {
         if (!event.active) simulation.alphaTarget(0);
         d.fx = null;
         d.fy = null;
       }
-
+  
       return d3.drag()
         .on('start', dragstarted)
         .on('drag', dragged)
         .on('end', dragended);
     }
-
+  
+    // Configurar el zoom
+    const zoom = d3.zoom()
+      .scaleExtent([0.1, 4])  // Rango de zoom permitido
+      .on('zoom', (event) => {
+        graphGroup.attr('transform', event.transform);  // Aplica la transformación al grupo de nodos y enlaces
+      });
+  
+    svg.call(zoom);  // Asignar el zoom al contenedor svg
+  
     return () => {
       simulation.stop();
     };

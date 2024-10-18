@@ -9,6 +9,9 @@
 .graph-container {
     width: 90%;
     height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 1px solid #ccc;
     background-color: #3a3939;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -31,6 +34,11 @@
 .link {
     stroke: #3f3a3a;
     stroke-opacity: 0.6;
+}
+
+svg {
+    cursor: move;  /* Mostrar cursor de movimiento cuando se interactúe */
+    pointer-events: all;  /* Permitir todos los eventos dentro del SVG */
 }
 
 /* Estilos para los colores de los grupos */

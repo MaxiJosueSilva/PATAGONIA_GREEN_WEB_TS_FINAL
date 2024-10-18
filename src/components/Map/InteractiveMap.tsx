@@ -262,8 +262,8 @@ const InteractiveMap: React.FC = () => {
               onChange={(e) => setMapType(e.target.value)}
             >
               <option value="street">Callejero</option>
-              <option value="satellite">Satélite</option>
-              <option value="terrain">Terreno</option>
+              {/* <option value="satellite">Satélite</option>
+              <option value="terrain">Terreno</option> */}
             </select>
           </div>
 

@@ -76,7 +76,8 @@ const Header: React.FC = () => {
                   </button>
                   {isNetworksOpen && (
                     <ul className="absolute left-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-50">
-                      <li><Link to="/d3" className="block px-4 py-2 text-sm hover:bg-gray-700">D3</Link></li>
+                      <li><Link to="/d3" className="block px-4 py-2 text-sm hover:bg-gray-700">CONEXION</Link></li>
+                      <li><Link to="/d3_arbol" className="block px-4 py-2 text-sm hover:bg-gray-700">ARBOL</Link></li>
                       <li><Link to="/onus" className="block px-4 py-2 text-sm hover:bg-gray-700">ONUs</Link></li>
                       <li><Link to="/network-topology" className="block px-4 py-2 text-sm hover:bg-gray-700">Topología</Link></li>
                       <li><Link to="/grupos" className="block px-4 py-2 text-sm hover:bg-gray-700">Grupos</Link></li>
