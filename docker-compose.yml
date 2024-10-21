@@ -45,13 +45,15 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
   neo4j:
     image: neo4j:4.4
     environment:
-      - NEO4J_AUTH=${NEO4J_AUTH}
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
     ports:
       - "7474:7474"
       - "7687:7687"

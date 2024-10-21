@@ -16,9 +16,19 @@ export const D3: React.FC = () => {
   
   useEffect(() => {
     if (status === 'succeeded' && nodes.nodeData && nodes.nodeLinks) {
+      // Ajustes para controlar la separación de los nodos
+      const adjustedNodes = nodes.nodeData.map(node => ({
+        ...node,
+        x: node.x * 2, // Multiplicar por un factor para aumentar la separación horizontal
+        y: node.y * 2 // Multiplicar por un factor para aumentar la separación vertical
+      }));
+      const adjustedLinks = nodes.nodeLinks.map(link => ({
+        ...link,
+        distance: link.distance * 2 // Multiplicar por un factor para aumentar la separación entre los nodos
+      }));
       setGraphData({ 
-        nodes: nodes.nodeData.map(node => ({...node})),
-        links: nodes.nodeLinks.map(link => ({...link}))
+        nodes: adjustedNodes,
+        links: adjustedLinks
       });
     }
   }, [nodes, status]);
