@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   frontend:
@@ -9,6 +9,9 @@ services:
       - "80:80"
     depends_on:
       - backend
+    volumes:
+      - ./src/assets:/usr/share/nginx/html/src/assets
+      - frontend_data:/data
 
   backend:
     build:
@@ -32,6 +35,8 @@ services:
     depends_on:
       - mysql
       - neo4j
+    volumes:
+      - backend_data:/data
 
   mysql:
     image: mysql:8.0
@@ -56,3 +61,5 @@ services:
 volumes:
   mysql_data:
   neo4j_data:
+  frontend_data:
+  backend_data:

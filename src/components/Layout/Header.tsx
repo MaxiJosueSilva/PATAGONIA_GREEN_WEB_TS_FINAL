@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Leaf, ChevronDown, Map, Menu, X, Users } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 const PatagoniaLogo = "/src/assets/Patagonia.png";
+//const PatagoniaLogo = "/usr/share/nginx/html/src/assets/Patagonia.png"; // Cambiado para reflejar la ruta correcta en el contenedor Docker
+
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
