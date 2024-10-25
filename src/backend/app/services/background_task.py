@@ -32,15 +32,11 @@ def inicializar_telegram_bot():
     def tarea():
         app = create_app()
         with app.app_context():
-            # Configura el bot
-            bot_instance = TelegramBot.get_instance()
-            bot_instance.set_token(Config.TELEGRAM_BOT_TOKEN)
+            # Configura el bot con el token directamente
+            bot_instance = TelegramBot(api_token=Config.TELEGRAM_BOT_TOKEN, chat_id=Config.CHAT_ID)
 
-            # Inicia el bot en segundo plano
-            bot_instance.start_listening()
-
-            # Aquí puedes continuar con el resto de tu aplicación
-            print("Tarea de inicialización del bot de Telegram iniciada en segundo plano.")
+            # Puedes realizar aquí otras acciones como iniciar el escuchador de mensajes
+            print("Bot de Telegram configurado e iniciado.")
 
     hilo = threading.Thread(target=tarea)
     hilo.daemon = True

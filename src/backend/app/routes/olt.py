@@ -55,6 +55,7 @@ def reset_onus():
                 db = current_app.db
                 db.execute("INSERT INTO reinicios_onu (fecha, usuario, numero_onu) VALUES (?, ?, ?)", (fecha_reinicio, user, onu_serial))
                 db.commit()
+                
             except Exception as e:
                 print(f"Error al reiniciar la ONU: {e}")
                 print(f"ALARMA: Excepción al intentar reiniciar la ONU {onu_serial}")

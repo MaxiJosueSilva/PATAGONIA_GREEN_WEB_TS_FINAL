@@ -7,9 +7,9 @@ from app.utils.shared_config import shared_config
 import os
 from app.services.telegram.telegram_clase import TelegramBot
 from app.services.edgeos.edgeos import edgemax_manager
-
+from app.services.telegram.telegram_bot import init_telegram_bot, get_telegram_bot
 # Se cambia el nombre de la instancia de bot para mayor claridad
-telegram_bot_instance = TelegramBot.get_instance()
+telegram_bot_instance = get_telegram_bot() 
 
 # Archivo para guardar las alarmas persistentes
 ALARMAS_FILE = 'alarmas.json'

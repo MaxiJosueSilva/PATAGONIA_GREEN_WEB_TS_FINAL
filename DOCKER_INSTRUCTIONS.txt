@@ -39,7 +39,6 @@ Pasos para ejecutar el proyecto con Docker:
 Notas adicionales:
 - Asegúrate de que los puertos 80 y 3000 estén disponibles en tu máquina.
 - Si encuentras problemas de permisos al ejecutar los comandos de Docker, puede que necesites usar 'sudo' antes de cada comando.
-<<<<<<< HEAD
 - Recuerda actualizar las variables de entorno en el archivo .env según sea necesario para tu entorno de producción.
 
 Construir la imagen
@@ -84,8 +83,3 @@ Lanzar la imagen
 
 
 
-=======
-- Recuerda actualizar las variables de entorno en el archivo .env según sea necesario para tu entorno de producción.
->>>>>>> parent of 63699185 (Modifico)
-
-dsfsdfsad

@@ -10,11 +10,13 @@ from .routes.neo4j import neo4j_bp
 from flask_cors import CORS
 from flask_wtf.csrf import CSRFProtect
 import os
-
+from app.services.telegram.telegram_bot import init_telegram_bot
 def create_app():
     app = Flask(__name__)
     app.config.from_object('app.config.Config')
     app.config.from_pyfile('../instance/config.py')
+    
+    init_telegram_bot()
 
     # Configuración para la carga de archivos
     app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'uploads') 
