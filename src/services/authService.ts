@@ -1,25 +1,4 @@
-// // Simulación de una base de datos de usuarios
-// const users = {
-//   "Maxi": { password: "MAXI", role: "admin", level: 10 }
-// };
 
-// export const login = (username: string, password: string): Promise<any> => {
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//       const user = users[username as keyof typeof users];
-//       if (user && user.password === password) {
-//         resolve({
-//           access_token: "fake_token_for_" + username,
-//           username: username,
-//           role: user.role,
-//           level: user.level
-//         });
-//       } else {
-//         reject(new Error("Credenciales inválidas"));
-//       }
-//     }, 300); // Simulamos un pequeño retraso para imitar una llamada a la red
-//   });
-// };
 
 import bcrypt from 'bcryptjs';
 import { fetchUsers, fetchActiveSessions, createSession, logLogin, deleteSession } from '../redux/slices/userSlice';

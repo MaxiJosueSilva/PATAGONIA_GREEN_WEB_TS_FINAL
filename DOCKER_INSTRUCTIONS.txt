@@ -39,4 +39,53 @@ Pasos para ejecutar el proyecto con Docker:
 Notas adicionales:
 - Asegúrate de que los puertos 80 y 3000 estén disponibles en tu máquina.
 - Si encuentras problemas de permisos al ejecutar los comandos de Docker, puede que necesites usar 'sudo' antes de cada comando.
+<<<<<<< HEAD
 - Recuerda actualizar las variables de entorno en el archivo .env según sea necesario para tu entorno de producción.
+
+Construir la imagen
+- docker build -t patagonia-green-sa:latest .
+Comprimir
+- docker save -o patagonia-green-sa.tar patagonia-green-sa:latest
+Enviar por ssh
+- scp patagonia-green-sa.tar admin@172.40.20.114:/imagenes
+
+
+Modificaciones
+-npm run build
+
+Lanzar la imagen
+# 1. Construir las imágenes
+# Frontend (asumiendo que el archivo se llama Dockerfile.frontend)
+      docker build -t patagonia-frontend:latest -f Dockerfile.frontend .
+      docker save -o patagonia-frontend.tar patagonia-frontend:latest
+      scp patagonia-frontend.tar admin@172.40.20.114:/imagenes
+      local 
+         docker run -d --name patagonia-frontend -p 80:80 -v frontend_data:/data patagonia-frontend:latest
+      servidor 
+         docker load -i patagonia-frontend.tar
+         docker run -d --name patagonia-frontend --network my_network -p 80:80 patagonia-frontend:latest
+         docker run -d --name patagonia-frontend --network my_network -p 80:80 -v frontend_data:/data patagonia-frontend:latest
+
+# Backend (asumiendo que el archivo se llama Dockerfile)
+   docker build -t patagonia-backend:latest -f Dockerfile .
+   docker save -o patagonia-backend.tar patagonia-backend:latest
+   scp patagonia-backend.tar admin@172.40.20.114:/imagenes
+   docker load -i patagonia-backend.tar
+   docker run -d --name patagonia-backend --network my_network -p 3000:3000 -v backend_data:/data patagonia-backend:latest
+   
+
+# 2. Crear red de Docker
+   docker network create patagonia-network
+
+# 3. Ejecutar el backend
+
+
+# 4. Ejecutar el frontend
+
+
+
+=======
+- Recuerda actualizar las variables de entorno en el archivo .env según sea necesario para tu entorno de producción.
+>>>>>>> parent of 63699185 (Modifico)
+
+dsfsdfsad

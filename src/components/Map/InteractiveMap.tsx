@@ -71,7 +71,7 @@ const InteractiveMap: React.FC = () => {
 
     // Asignar la referencia al MapContainer aquí
     useEffect(() => {
-      mapRef.current = map.viewport; // Usar map.viewport para obtener el elemento del mapa
+      mapRef.current = map; // Usar map.viewport para obtener el elemento del mapa
     }, [map]); 
 
     return null;
@@ -109,11 +109,15 @@ const InteractiveMap: React.FC = () => {
         return false;
       }
     );
-
+  
     if (foundCamera && foundCamera.lat !== undefined && foundCamera.lon !== undefined) {
-      // Asumiendo que mapRef.current es ahora la referencia al MapContainer de Leaflet
-      (mapRef.current as any).leafletElement.setView([foundCamera.lat, foundCamera.lon], 18);
-      setSelectedCamera(foundCamera);
+      // Asegurarse de que mapRef.current esté correctamente asignado al mapa
+      if (mapRef.current && typeof mapRef.current.setView === 'function') {
+        mapRef.current.setView([foundCamera.lat, foundCamera.lon], 18);
+        setSelectedCamera(foundCamera);
+      } else {
+        console.error('Referencia al mapa no válida o setView no disponible');
+      }
     } else {
       alert('Cámara no encontrada o sin coordenadas válidas');
     }
@@ -423,10 +427,9 @@ const InteractiveMap: React.FC = () => {
                   className="close-button"
                   onClick={() => setSelectedCamera(null)}
                 >
-                  ×
                 </button>
-                <Video key={`video-${selectedCamera.ip}`} camaraip={selectedCamera.ip} />
-                {selectedCamera.onu && (
+                {selectedCamera.capa === "CAMARAS" && <Video key={`video-${selectedCamera.ip}`} camaraip={selectedCamera.ip} />}
+                {selectedCamera.onu && selectedCamera.onu.online === 'true' && (
                   <ONUData
                     key={`onu-${selectedCamera.idCamara || selectedCamera.idComisaria || selectedCamera.idCliente || selectedCamera.idPredio}`}
                     data={selectedCamera.onu}

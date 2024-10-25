@@ -51,7 +51,7 @@ const Header: React.FC = () => {
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="flex items-center space-x-2">
           <img src={PatagoniaLogo} alt="Patagonia Green" className="w-8 h-8 text-blue-400" />
-          <span className="text-xl font-bold text-blue-300">Patagonia Green</span>
+          <span className="text-xl font-bold text-blue-300">Patagonia Green S.A.</span>
         </Link>
         <div className="md:hidden">
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>

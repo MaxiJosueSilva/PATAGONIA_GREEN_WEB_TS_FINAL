@@ -10,7 +10,7 @@ const Video: React.FC<VideoProps> = ({ camaraip }) => {
 
   useEffect(() => {
     if (camaraip) {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://172.40.20.114:3000';
       const user = import.meta.env.VITE_VIDEO_USER || 'admin';
       const password = import.meta.env.VITE_VIDEO_PASSWORD || 'Sussex731';
       const url = `${backendUrl}/video_feed?url=${camaraip}&user=${user}&password=${password}`;

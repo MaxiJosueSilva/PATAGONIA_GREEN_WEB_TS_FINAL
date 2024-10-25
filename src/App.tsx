@@ -33,8 +33,8 @@ const App: React.FC = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
           <Route path="/map" element={<ProtectedRoute minLevel={5}><InteractiveMap /></ProtectedRoute>} />
-          <Route path="/d3" element={<ProtectedRoute minLevel={5}><D3 /></ProtectedRoute>} />
-          <Route path="/d3_arbol" element={<ProtectedRoute minLevel={5}><D3_Arbol /></ProtectedRoute>} />
+          <Route path="/d3" element={<ProtectedRoute minLevel={6}><D3 /></ProtectedRoute>} />
+          <Route path="/d3_arbol" element={<ProtectedRoute minLevel={6}><D3_Arbol /></ProtectedRoute>} />
           <Route path="/onus" element={<ProtectedRoute minLevel={5}><FormOnus /></ProtectedRoute>} />
           <Route path="/network-topology" element={<ProtectedRoute minLevel={5}><NetworkTopology /></ProtectedRoute>} />
           <Route path="/grupos" element={<ProtectedRoute minLevel={5}><Grupos /></ProtectedRoute>} />
