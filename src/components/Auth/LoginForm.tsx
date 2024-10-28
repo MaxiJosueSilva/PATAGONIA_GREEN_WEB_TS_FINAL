@@ -56,6 +56,7 @@ const LoginForm: React.FC = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="form-input"
+              style={{ backgroundColor: '#1a202c', color: 'white' }}
               required
             />
           </div>
@@ -66,10 +67,11 @@ const LoginForm: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="form-input"
+              style={{ backgroundColor: '#1a202c', color: 'white' }}
               required
             />
           </div>
-          <button type="submit" className="Send" disabled={alreadyAuthenticated}>
+          <button type="submit" className="Send" disabled={alreadyAuthenticated} style={{ backgroundColor: '#0000ff' }}>
             Iniciar Sesión
           </button>
         </form>

@@ -139,6 +139,7 @@ const FormOnus: React.FC = () => {
                             placeholder="Buscar..."
                             value={searchTerm}
                             onChange={handleSearch}
+                            style={{ backgroundColor: '#1a202c', color: 'white' }}
                             />
                         </div>
 						</InputGroup>
