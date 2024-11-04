@@ -10,13 +10,14 @@ import AlertBanner from '../UI/AlertBanner';
 import ONUData from '../ONUData';
 import Video from '../Video';
 import HistorialCamaraChart from '../HistorialCamaraChart';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import HeatmapLayer from './HeatmapLayer';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import './InteractiveMap.css';
 
-// Importar los datos estáticos de las fibras (coordenadas [lat, lng])
-import { FO96h, FO24h, FO12h } from './fibra_optica.js'; 
+// Importar los datos estáticos de las fibras
+import { FO96h, FO24h, FO12h } from './fibra_optica.js';
 
 interface Camara {
   idCamara?: string;
@@ -57,23 +58,17 @@ const InteractiveMap: React.FC = () => {
   const status = useSelector((state: RootState) => state.olt.status);
   const error = useSelector((state: RootState) => state.olt.error);
   const [searchTerm, setSearchTerm] = useState('');
-  const mapRef = useRef<MapContainer | null>(null); 
-  // Estado para la visibilidad de las fibras
+  const mapRef = useRef<any>(null);
   const [showFibra96h, setShowFibra96h] = useState(true);
   const [showFibra24h, setShowFibra24h] = useState(true);
   const [showFibra12h, setShowFibra12h] = useState(true);
-
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  
   const MapController = () => {
     const map = useMap();
-
-    // Asignar la referencia al MapContainer aquí
     useEffect(() => {
-      mapRef.current = map; // Usar map.viewport para obtener el elemento del mapa
-    }, [map]); 
-
+      mapRef.current = map;
+    }, [map]);
     return null;
   };
 
@@ -109,14 +104,11 @@ const InteractiveMap: React.FC = () => {
         return false;
       }
     );
-  
+
     if (foundCamera && foundCamera.lat !== undefined && foundCamera.lon !== undefined) {
-      // Asegurarse de que mapRef.current esté correctamente asignado al mapa
-      if (mapRef.current && typeof mapRef.current.setView === 'function') {
+      if (mapRef.current) {
         mapRef.current.setView([foundCamera.lat, foundCamera.lon], 18);
         setSelectedCamera(foundCamera);
-      } else {
-        console.error('Referencia al mapa no válida o setView no disponible');
       }
     } else {
       alert('Cámara no encontrada o sin coordenadas válidas');
@@ -207,7 +199,7 @@ const InteractiveMap: React.FC = () => {
     }
   };
 
-  const filteredCamaras = staticCamaras.filter(camara => 
+  const filteredCamaras = staticCamaras.filter(camara =>
     (!filterType || camara.tipo === filterType) &&
     (!filterCapa || camara.capa === filterCapa)
   );
@@ -215,18 +207,17 @@ const InteractiveMap: React.FC = () => {
   const uniqueTipos = Array.from(new Set(staticCamaras.map(c => c.tipo)));
   const uniqueCapas = Array.from(new Set(staticCamaras.map(c => c.capa)));
 
-  // Función para renderizar las fibras ópticas (usando Polyline de Leaflet)
   const renderFibras = () => {
     return (
       <>
         {showFibra96h && FO96h.map((fibra: any) => (
-          <Polyline key={fibra.name} positions={fibra.coordinates} pathOptions={{ color: fibra.color, weight: parseFloat(fibra.weight) }} /> // Cambiar "weidth" a "weight"
+          <Polyline key={fibra.name} positions={fibra.coordinates} pathOptions={{ color: fibra.color, weight: parseFloat(fibra.weight) }} />
         ))}
         {showFibra24h && FO24h.map((fibra: any) => (
-          <Polyline key={fibra.name} positions={fibra.coordinates} pathOptions={{ color: fibra.color, weight: parseFloat(fibra.weight) }} /> // Cambiar "weidth" a "weight"
+          <Polyline key={fibra.name} positions={fibra.coordinates} pathOptions={{ color: fibra.color, weight: parseFloat(fibra.weight) }} />
         ))}
         {showFibra12h && FO12h.map((fibra: any) => (
-          <Polyline key={fibra.name} positions={fibra.coordinates} pathOptions={{ color: fibra.color, weight: parseFloat(fibra.weight) }} /> // Cambiar "weidth" a "weight"
+          <Polyline key={fibra.name} positions={fibra.coordinates} pathOptions={{ color: fibra.color, weight: parseFloat(fibra.weight) }} />
         ))}
       </>
     );
@@ -236,11 +227,9 @@ const InteractiveMap: React.FC = () => {
     <div className="flex flex-col" style={{ height: 'calc(110vh - 100px - 100px)' }}>
       <AlertBanner camaras={staticCamaras} />
       <div className="flex flex-1 relative">
-        {/* Tabla de filtros */}
         <div className="w-1/6 p-4 bg-gray-800 overflow-y-auto">
           <h2 className="text-xl font-bold mb-4 text-white">Filtros y Visualización</h2>
 
-          {/* Buscador de cámaras */}
           <div className="mb-4">
             <label className="block mb-2 text-white">Buscar Cámara:</label>
             <form onSubmit={handleSearch} className="flex">
@@ -257,7 +246,6 @@ const InteractiveMap: React.FC = () => {
             </form>
           </div>
 
-          {/* Selector de tipo de mapa */}
           <div className="mb-4">
             <label className="block mb-2 text-white">Tipo de Mapa:</label>
             <select
@@ -266,12 +254,9 @@ const InteractiveMap: React.FC = () => {
               onChange={(e) => setMapType(e.target.value)}
             >
               <option value="street">Callejero</option>
-              {/* <option value="satellite">Satélite</option>
-              <option value="terrain">Terreno</option> */}
             </select>
           </div>
 
-          {/* Selector de visualización */}
           <div className="mb-4">
             <label className="block mb-2 text-white">Visualización:</label>
             <select
@@ -287,7 +272,6 @@ const InteractiveMap: React.FC = () => {
             </select>
           </div>
 
-          {/* Filtro por tipo */}
           <div className="mb-4">
             <label className="block mb-2 text-white">Filtrar por Tipo:</label>
             <select
@@ -302,7 +286,6 @@ const InteractiveMap: React.FC = () => {
             </select>
           </div>
 
-          {/* Filtro por capa */}
           <div className="mb-4">
             <label className="block mb-2 text-white">Filtrar por Capa:</label>
             <select
@@ -317,11 +300,10 @@ const InteractiveMap: React.FC = () => {
             </select>
           </div>
 
-          {/* Checkbox para mostrar fibras */}
           <div className="mb-4">
             <label className="block mb-2 text-white">Mostrar Fibras:</label>
-            <div className="flex"> {/* Agregar clase "flex" */}
-              <div className="mr-4"> {/* Agregar margen derecho para separar los checkboxes */}
+            <div className="flex">
+              <div className="mr-4">
                 <input
                   type="checkbox"
                   id="fibra96h"
@@ -330,7 +312,7 @@ const InteractiveMap: React.FC = () => {
                 />
                 <label htmlFor="fibra96h" className="ml-2 text-white">F.O. 96 H</label>
               </div>
-              <div className="mr-4"> {/* Agregar margen derecho para separar los checkboxes */}
+              <div className="mr-4">
                 <input
                   type="checkbox"
                   id="fibra24h"
@@ -339,7 +321,7 @@ const InteractiveMap: React.FC = () => {
                 />
                 <label htmlFor="fibra24h" className="ml-2 text-white">F.O. 24 H</label>
               </div>
-              <div> {/* No es necesario margen derecho en el último checkbox */}
+              <div>
                 <input
                   type="checkbox"
                   id="fibra12h"
@@ -354,54 +336,72 @@ const InteractiveMap: React.FC = () => {
           <DashboardStats camaras={filteredCamaras} />
         </div>
 
-        {/* Mapa */}
-        <div className="w-5/6 relative" ref={mapRef}>
-          {/* Mapa de Leaflet (contiene las fibras y las cámaras) */}
-          <MapContainer center={[-31.7333, -60.5233]} zoom={13} className="map-container" >
+        <div className="w-5/6 relative">
+          <MapContainer center={[-31.7333, -60.5233]} zoom={13} className="map-container">
             <MapController />
             <TileLayer
               url={getMapUrl()}
               attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
 
-            {/* Marcadores de las cámaras */}
-            {filteredCamaras.map((camara) => {
-              const hasValidCoords = camara.lat != null && camara.lon != null;
-              const keyPrefix = camara.idCamara
-                ? 'camara-'
-                : camara.idComisaria
-                ? 'comisaria-'
-                : camara.idCliente
-                ? 'cliente-'
-                : camara.idPredio
-                ? 'predio-'
-                : 'unknown-';
-              const uniqueKey = `${keyPrefix}${camara.idCamara || camara.idComisaria || camara.idCliente || camara.idPredio}`;
+            <MarkerClusterGroup
+              chunkedLoading
+              spiderfyOnMaxZoom={true}
+              showCoverageOnHover={false}
+              zoomToBoundsOnClick={true}
+              maxClusterRadius={40}
+              spiderfyDistanceMultiplier={2}
+              iconCreateFunction={(cluster) => {
+                const childCount = cluster.getChildCount();
+                let c = ' marker-cluster-';
+                if (childCount < 10) c += 'small';
+                else if (childCount < 100) c += 'medium';
+                else c += 'large';
 
-              return (
-                hasValidCoords && (
-                  <React.Fragment key={uniqueKey}>
-                    <Marker
-                      position={[camara.lat, camara.lon]}
-                      icon={getMarkerIcon(camara.icon, getMarkerColor(camara))}
-                      eventHandlers={{
-                        click: () => handleCameraClick(camara),
-                      }}
-                    >
-                      <Popup>
-                        <h3>{camara.name ?? 'Sin nombre'}</h3>
-                        <p>Tipo: {camara.tipo ?? 'Desconocido'}</p>
-                        <p>Sector: {camara.sector ?? 'No especificado'}</p>
-                        <p>Capa: {camara.capa ?? 'No especificada'}</p>
-                      </Popup>
-                    </Marker>
-                    <CameraArc key={`arc-${uniqueKey}`} camera={camara} />
-                  </React.Fragment>
-                )
-              );
-            })}
+                return L.divIcon({
+                  html: '<div><span>' + childCount + '</span></div>',
+                  className: 'marker-cluster' + c,
+                  iconSize: new L.Point(40, 40)
+                });
+              }}
+            >
+              {filteredCamaras.map((camara) => {
+                const hasValidCoords = camara.lat != null && camara.lon != null;
+                const keyPrefix = camara.idCamara
+                  ? 'camara-'
+                  : camara.idComisaria
+                    ? 'comisaria-'
+                    : camara.idCliente
+                      ? 'cliente-'
+                      : camara.idPredio
+                        ? 'predio-'
+                        : 'unknown-';
+                const uniqueKey = `${keyPrefix}${camara.idCamara || camara.idComisaria || camara.idCliente || camara.idPredio}`;
 
-            {/* Heatmap */}
+                return (
+                  hasValidCoords && (
+                    <React.Fragment key={uniqueKey}>
+                      <Marker
+                        position={[camara.lat, camara.lon]}
+                        icon={getMarkerIcon(camara.icon, getMarkerColor(camara))}
+                        eventHandlers={{
+                          click: () => handleCameraClick(camara),
+                        }}
+                      >
+                        <Popup>
+                          <h3>{camara.name ?? 'Sin nombre'}</h3>
+                          <p>Tipo: {camara.tipo ?? 'Desconocido'}</p>
+                          <p>Sector: {camara.sector ?? 'No especificado'}</p>
+                          <p>Capa: {camara.capa ?? 'No especificada'}</p>
+                        </Popup>
+                      </Marker>
+                      <CameraArc camera={camara} />
+                    </React.Fragment>
+                  )
+                );
+              })}
+            </MarkerClusterGroup>
+
             {visualization === 'temp_cpu' && (
               <HeatmapLayer
                 points={getHeatmapPoints()}
@@ -409,13 +409,11 @@ const InteractiveMap: React.FC = () => {
               />
             )}
 
-            {/* Renderizar las fibras ópticas */}
-            {renderFibras()} 
+            {renderFibras()}
 
             <MapLegend visualization={visualization} />
           </MapContainer>
 
-          {/* Panel lateral de la cámara seleccionada */}
           {selectedCamera && (
             <div
               className="right-panel show"
@@ -427,6 +425,7 @@ const InteractiveMap: React.FC = () => {
                   className="close-button"
                   onClick={() => setSelectedCamera(null)}
                 >
+                  ×
                 </button>
                 {selectedCamera.capa === "CAMARAS" && <Video key={`video-${selectedCamera.ip}`} camaraip={selectedCamera.ip} />}
                 {selectedCamera.onu && selectedCamera.onu.online === 'true' && (
@@ -447,7 +446,6 @@ const InteractiveMap: React.FC = () => {
             </div>
           )}
 
-          {/* Panel inferior de la cámara seleccionada */}
           {selectedCamera && (
             <div
               className="bottom-panel show"

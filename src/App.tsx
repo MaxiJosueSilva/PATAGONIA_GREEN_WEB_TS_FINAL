@@ -18,6 +18,8 @@ import NetworkTopology from './components/NetworkTopology';
 import Grupos from './components/Grupos/Grupos';
 import FormCamaras from './components/Cameras/FormCamaras';
 import UserList from './components/User/UserList';
+import Data_Center from './components/Data_Center_911/Data_Center';
+
 
 const App: React.FC = () => {
   return (
@@ -36,6 +38,7 @@ const App: React.FC = () => {
           <Route path="/d3" element={<ProtectedRoute minLevel={6}><D3 /></ProtectedRoute>} />
           <Route path="/d3_arbol" element={<ProtectedRoute minLevel={6}><D3_Arbol /></ProtectedRoute>} />
           <Route path="/onus" element={<ProtectedRoute minLevel={5}><FormOnus /></ProtectedRoute>} />
+          <Route path="/data-center" element={<ProtectedRoute minLevel={5}><Data_Center /></ProtectedRoute>} />
           <Route path="/network-topology" element={<ProtectedRoute minLevel={5}><NetworkTopology /></ProtectedRoute>} />
           <Route path="/grupos" element={<ProtectedRoute minLevel={5}><Grupos /></ProtectedRoute>} />
           <Route path="/form-camaras" element={<ProtectedRoute minLevel={5}><FormCamaras /></ProtectedRoute>} />

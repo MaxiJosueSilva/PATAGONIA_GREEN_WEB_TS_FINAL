@@ -2,11 +2,9 @@
 .map-container {
   height: 100%;
   width: 100%;
-  /* transform: scaleX(1.15); */
   position: relative;
   overflow: hidden;
   background: #1a1a1a;
-
 }
 
 .custom-icon {
@@ -29,9 +27,49 @@
   max-width: 100%;
 }
 
+/* Estilos para clusters */
+.marker-cluster-small {
+  background-color: rgba(181, 226, 140, 0.6);
+}
+.marker-cluster-small div {
+  background-color: rgba(110, 204, 57, 0.6);
+}
+
+.marker-cluster-medium {
+  background-color: rgba(241, 211, 87, 0.6);
+}
+.marker-cluster-medium div {
+  background-color: rgba(240, 194, 12, 0.6);
+}
+
+.marker-cluster-large {
+  background-color: rgba(253, 156, 115, 0.6);
+}
+.marker-cluster-large div {
+  background-color: rgba(241, 128, 23, 0.6);
+}
+
+.marker-cluster {
+  background-clip: padding-box;
+  border-radius: 20px;
+}
+.marker-cluster div {
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
+  margin-top: 5px;
+  text-align: center;
+  border-radius: 15px;
+  font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Panel de filtros */
 .filters-panel {
-  width: 16.666667%; /* w-1/6 */
+  width: 16.666667%;
   padding: 1rem;
   background-color: rgb(31, 41, 55);
   overflow-y: auto;
@@ -89,7 +127,7 @@
   cursor: pointer;
 }
 
-/* Estilos para móviles (hasta 768px) */
+/* Estilos para móviles */
 @media screen and (max-width: 768px) {
   .filters-panel {
     position: fixed;
@@ -102,18 +140,6 @@
 
   .filters-panel.show {
     left: 0;
-  }
-
-  .filters-toggle {
-    display: block;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 1001;
-    background-color: rgb(31, 41, 55);
-    padding: 0.5rem;
-    border-radius: 4px;
-    color: white;
   }
 
   .right-panel {
@@ -136,11 +162,11 @@
   }
 
   .map-container {
-    height: calc(100vh - 56px); /* Ajustar altura considerando la barra de navegación */
+    height: calc(100vh - 56px);
   }
 }
 
-/* Estilos para tablets (768px - 1024px) */
+/* Estilos para tablets */
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   .filters-panel {
     width: 25%;
@@ -155,23 +181,4 @@
     width: 75%;
     height: 25%;
   }
-}
-
-/* Animaciones */
-.fade-enter {
-  opacity: 0;
-}
-
-.fade-enter-active {
-  opacity: 1;
-  transition: opacity 300ms ease-in;
-}
-
-.fade-exit {
-  opacity: 1;
-}
-
-.fade-exit-active {
-  opacity: 0;
-  transition: opacity 300ms ease-out;
 }

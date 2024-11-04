@@ -82,6 +82,7 @@ const Header: React.FC = () => {
                       <li><Link to="/d3_arbol" className="block px-4 py-2 text-sm hover:bg-gray-700">ARBOL</Link></li>
                       <li><Link to="/onus" className="block px-4 py-2 text-sm hover:bg-gray-700">ONUs</Link></li>
                       <li><Link to="/network-topology" className="block px-4 py-2 text-sm hover:bg-gray-700">Topología</Link></li>
+                      <li><Link to="/data-center" className="block px-4 py-2 text-sm hover:bg-gray-700">Data Center 911</Link></li>
                       <li><Link to="/grupos" className="block px-4 py-2 text-sm hover:bg-gray-700">Grupos</Link></li>
                     </ul>
                   )}
