@@ -6,6 +6,7 @@ import gruposReducer from './slices/gruposSlice';
 import sbsReducer from './slices/sbsSlice';
 import onuReducer from './slices/onuSlice';
 import neo4jReducer from './slices/neo4jSlice';
+import datacenterSlice from './slices/datacenterSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     sbs: sbsReducer,
     onus: onuReducer,
     neo4j: neo4jReducer,
+    datacenter: datacenterSlice
   },
 });
 
