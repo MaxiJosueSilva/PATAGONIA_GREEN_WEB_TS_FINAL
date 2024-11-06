@@ -38,6 +38,7 @@ const Detalle: React.FC = () => {
         <div>
           <h1 className="text-lg font-semibold">{cam.name}</h1>
           <p><strong>Sector:</strong> {cam.sector}</p>
+          {cam.nombre && <p><strong>Nombre:</strong> {cam.nombre}</p>}
           <p><strong>IP:</strong> {cam.ip}</p>
           <p><strong>Tipo:</strong> {cam.tipo}</p>
           <p><strong>Cantidad:</strong> {cam.cantidad}</p>

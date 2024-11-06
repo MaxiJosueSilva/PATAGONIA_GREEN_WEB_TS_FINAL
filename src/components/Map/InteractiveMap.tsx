@@ -14,6 +14,7 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import HeatmapLayer from './HeatmapLayer';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { FaInfoCircle } from 'react-icons/fa';
 import './InteractiveMap.css';
 
 // Importar los datos estáticos de las fibras
@@ -63,6 +64,7 @@ const InteractiveMap: React.FC = () => {
   const [showFibra24h, setShowFibra24h] = useState(true);
   const [showFibra12h, setShowFibra12h] = useState(true);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [showMarkerCluster, setShowMarkerCluster] = useState(false);
 
   const MapController = () => {
     const map = useMap();
@@ -333,6 +335,19 @@ const InteractiveMap: React.FC = () => {
             </div>
           </div>
 
+          <div className="mb-4">
+            {/* <label className="block mb-2 text-white">Agrupación de Marcadores:</label> */}
+            <div className="flex">
+              <input
+                type="checkbox"
+                id="showMarkerCluster"
+                checked={showMarkerCluster}
+                onChange={() => setShowMarkerCluster(!showMarkerCluster)}
+              />
+              <label htmlFor="showMarkerCluster" className="ml-2 text-white">Agrupar</label>
+            </div>
+          </div>
+
           <DashboardStats camaras={filteredCamaras} />
         </div>
 
@@ -344,28 +359,66 @@ const InteractiveMap: React.FC = () => {
               attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
 
-            <MarkerClusterGroup
-              chunkedLoading
-              spiderfyOnMaxZoom={true}
-              showCoverageOnHover={false}
-              zoomToBoundsOnClick={true}
-              maxClusterRadius={40}
-              spiderfyDistanceMultiplier={2}
-              iconCreateFunction={(cluster) => {
-                const childCount = cluster.getChildCount();
-                let c = ' marker-cluster-';
-                if (childCount < 10) c += 'small';
-                else if (childCount < 100) c += 'medium';
-                else c += 'large';
+            {showMarkerCluster ? (
+              <MarkerClusterGroup
+                chunkedLoading
+                spiderfyOnMaxZoom={true}
+                showCoverageOnHover={false}
+                zoomToBoundsOnClick={true}
+                maxClusterRadius={40}
+                spiderfyDistanceMultiplier={2}
+                iconCreateFunction={(cluster) => {
+                  const childCount = cluster.getChildCount();
+                  let c = ' marker-cluster-';
+                  if (childCount < 10) c += 'small';
+                  else if (childCount < 100) c += 'medium';
+                  else c += 'large';
 
-                return L.divIcon({
-                  html: '<div><span>' + childCount + '</span></div>',
-                  className: 'marker-cluster' + c,
-                  iconSize: new L.Point(40, 40)
-                });
-              }}
-            >
-              {filteredCamaras.map((camara) => {
+                  return L.divIcon({
+                    html: '<div><span>' + childCount + '</span></div>',
+                    className: 'marker-cluster' + c,
+                    iconSize: new L.Point(40, 40)
+                  });
+                }}
+              >
+                {filteredCamaras.map((camara) => {
+                  const hasValidCoords = camara.lat != null && camara.lon != null;
+                  const keyPrefix = camara.idCamara
+                    ? 'camara-'
+                    : camara.idComisaria
+                      ? 'comisaria-'
+                      : camara.idCliente
+                        ? 'cliente-'
+                        : camara.idPredio
+                          ? 'predio-'
+                          : 'unknown-';
+                  const uniqueKey = `${keyPrefix}${camara.idCamara || camara.idComisaria || camara.idCliente || camara.idPredio}`;
+
+                  return (
+                    hasValidCoords && (
+                      <React.Fragment key={uniqueKey}>
+                        <Marker
+                          position={[camara.lat, camara.lon]}
+                          icon={getMarkerIcon(camara.icon, getMarkerColor(camara))}
+                          eventHandlers={{
+                            click: () => handleCameraClick(camara),
+                          }}
+                        >
+                          <Popup>
+                            <h3>{camara.name ?? 'Sin nombre'}</h3>
+                            <p>Tipo: {camara.tipo ?? 'Desconocido'}</p>
+                            <p>Sector: {camara.sector ?? 'No especificado'}</p>
+                            <p>Capa: {camara.capa ?? 'No especificada'}</p>
+                          </Popup>
+                        </Marker>
+                        <CameraArc camera={camara} />
+                      </React.Fragment>
+                    )
+                  );
+                })}
+              </MarkerClusterGroup>
+            ) : (
+              filteredCamaras.map((camara) => {
                 const hasValidCoords = camara.lat != null && camara.lon != null;
                 const keyPrefix = camara.idCamara
                   ? 'camara-'
@@ -399,8 +452,8 @@ const InteractiveMap: React.FC = () => {
                     </React.Fragment>
                   )
                 );
-              })}
-            </MarkerClusterGroup>
+              })
+            )}
 
             {visualization === 'temp_cpu' && (
               <HeatmapLayer
@@ -435,7 +488,10 @@ const InteractiveMap: React.FC = () => {
                   />
                 )}
                 <div key={`details-${selectedCamera.idCamara || selectedCamera.idComisaria || selectedCamera.idCliente || selectedCamera.idPredio}`}>
-                  <h3 className="text-xl font-bold mb-2">Detalles</h3>
+                  <div className="flex items-center justify-center">
+                    <FaInfoCircle size={30} className="mr-2" />
+                    <h3 className="text-xl font-bold mb-2">DETALLE</h3>
+                  </div>
                   <p>Nombre: {selectedCamera.name}</p>
                   <p>Tipo: {selectedCamera.tipo}</p>
                   <p>Sector: {selectedCamera.sector}</p>

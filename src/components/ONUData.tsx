@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaWifi, FaThermometerHalf, FaMemory, FaBolt, FaArrowUp, FaArrowDown, FaMicrochip } from 'react-icons/fa';
+import { FaWifi, FaThermometerHalf, FaMemory, FaBolt, FaArrowUp, FaArrowDown, FaMicrochip, FaMapMarkerAlt } from 'react-icons/fa';
 import GaugeChart from 'react-gauge-chart';
 
 interface ONUDataProps {
@@ -42,7 +42,7 @@ const ONUData: React.FC<ONUDataProps> = ({ data }) => {
 
   return (
     <div style={{ padding: '10px', backgroundColor: 'transparent', color: 'white', borderRadius: '5px', width: '100%', height: '100%', overflow: 'auto', fontSize: '0.8rem' }}>
-      <h4 className="text-sm font-semibold mb-2 text-center flex items-center justify-center"><FaMicrochip /> Información del Sistema</h4>
+      <h4 className="text-xl font-bold mb-2 text-center flex items-center justify-center"><FaMicrochip size={30} /> INFORMACION DEL SISTEMA</h4>
       <div className="flex justify-between mb-2">
         <div>
           <p>CPU: {system.cpu}%</p>
@@ -78,7 +78,10 @@ const ONUData: React.FC<ONUDataProps> = ({ data }) => {
           <p>TX Total: {stats.tx_bytes} bytes | RX Total: {stats.rx_bytes} bytes</p>
         </div>
       </div> 
-      <p className="mt-2">Distancia: {distance} metros</p>
+      <div className="mt-2 flex items-center justify-center">
+        <FaMapMarkerAlt size={30} className="mr-2" />
+        <p>Distancia: {distance} metros</p>
+      </div>
     </div>
   );
 };
