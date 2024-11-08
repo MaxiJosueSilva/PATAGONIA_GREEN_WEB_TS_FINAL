@@ -20,6 +20,7 @@ import FormCamaras from './components/Cameras/FormCamaras';
 import UserList from './components/User/UserList';
 import Data_Center from './components/Data_Center_911/Data_Center';
 import Grupo_Electrogeno from './components/Grupo_Electrogeno/Grupo_Electrogeno';
+import Cpu from './components/CPU/Cpu';
 
 const App: React.FC = () => {
   return (
@@ -41,6 +42,7 @@ const App: React.FC = () => {
           <Route path="/data-center" element={<ProtectedRoute minLevel={5}><Data_Center /></ProtectedRoute>} />
           <Route path="/network-topology" element={<ProtectedRoute minLevel={5}><NetworkTopology /></ProtectedRoute>} />
           <Route path="/grupos" element={<ProtectedRoute minLevel={5}><Grupos /></ProtectedRoute>} />
+          <Route path="/cpu" element={<ProtectedRoute minLevel={5}><Cpu /></ProtectedRoute>} />
           <Route path="/grupo_electrogeno" element={<ProtectedRoute minLevel={5}><Grupo_Electrogeno /></ProtectedRoute>} />
           <Route path="/form-camaras" element={<ProtectedRoute minLevel={5}><FormCamaras /></ProtectedRoute>} />
           <Route path="/users" element={<ProtectedRoute minLevel={10}><UserList /></ProtectedRoute>} />

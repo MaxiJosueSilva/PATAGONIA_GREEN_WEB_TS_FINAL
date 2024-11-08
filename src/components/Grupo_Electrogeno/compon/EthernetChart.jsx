@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Line } from 'react-chartjs-2';
-import { fetchHistoricalData } from '../store/generatorSlice';
+import { getHistorial } from '../../../redux/slices/gruposSlice';
 import moment from 'moment';
 import {
   Chart as ChartJS,
@@ -31,11 +31,11 @@ ChartJS.register(
 
 function EthernetChart({ selectedNode }) {
   const dispatch = useDispatch();
-  const historicalData = useSelector(state => state.generators.historicalData[selectedNode]);
+  const historicalData = useSelector(state => state.grupos.historial[selectedNode]);
   const chartRef = useRef(null);
 
   useEffect(() => {
-    dispatch(fetchHistoricalData(selectedNode));
+    dispatch(getHistorial(selectedNode));
   }, [selectedNode, dispatch]);
 
   const formatChartData = (data) => {
@@ -89,7 +89,7 @@ function EthernetChart({ selectedNode }) {
   };
 
   return (
-    <div style={{ height: '200px' }}>
+    <div style={{ height: '200px'}}>
       <Line 
         ref={chartRef}
         data={{

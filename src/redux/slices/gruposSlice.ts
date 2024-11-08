@@ -64,7 +64,7 @@ export const getHistorial = createAsyncThunk('grupos/getHistorial', async (id) =
             password: contraseña
         }
     });
-    return response.data;
+    return response.data[0];
 });
 
 
@@ -78,10 +78,44 @@ const gruposSlice = createSlice({
         sbs911: [],
         locations: [],
         historial: [],
+        historicalData: {},
+        realTimeData: {},
         status: 'idle',
         error: null,
     },
-    reducers: {},
+    reducers: {
+
+        updateRealTimeData: (state, action) => {
+            const { node_id, ...data } = action.payload;
+            state.realTimeData[node_id] = {
+            ...state.realTimeData[node_id],
+            ...data,
+            timestamp: Date.now(),
+            };
+
+            // Update historical data with real-time data
+            if (state.historicalData[node_id]) {
+            const energiaData = state.historicalData[node_id].data.map((dataset, index) => {
+                const newData = [...dataset];
+                if (newData.length > 30) newData.shift();
+                
+                const value = index === 0 ? data.energia?.entrada :
+                            index === 1 ? data.energia?.salida :
+                            data.energia?.nebula;
+
+                if (typeof value === 'number') {
+                newData.push({ x: data.timestamp, y: value });
+                }
+                return newData;
+            });
+
+            state.historicalData[node_id] = {
+                ...state.historicalData[node_id],
+                data: energiaData
+            };
+            }
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchSBS1.fulfilled, (state, action) => {
@@ -152,5 +186,6 @@ const gruposSlice = createSlice({
             });
     },
 });
+export const { updateRealTimeData } = gruposSlice.actions;
 
 export default gruposSlice.reducer;

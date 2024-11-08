@@ -100,15 +100,28 @@ const FormOnus: React.FC = () => {
     } else if (status === 'succeeded') {
         const sortedOnus = filteredOnus.sort((a, b) => {
             if (sortField) {
-                const aValue = a[sortField];
-                const bValue = b[sortField];
+                let aValue = a[sortField];
+                let bValue = b[sortField];
+        
+                // Acceso a los campos anidados para Tx y Rx, convertiendo a float
+                if (sortField === 'tx_power_onu' && a.optics && b.optics) {
+                    aValue = parseFloat(a.optics?.tx_power_onu) || 0;
+                    bValue = parseFloat(b.optics?.tx_power_onu) || 0;
+                } else if (sortField === 'rx_power_onu' && a.optics && b.optics) {
+                    aValue = parseFloat(a.optics?.rx_power_onu) || 0;
+                    bValue = parseFloat(b.optics?.rx_power_onu) || 0;
+                }else if (sortField === 'distance') {
+                    aValue = parseFloat(a.distance) || 0;
+                    bValue = parseFloat(b.distance) || 0;
+                }
+        
+                // Comparación genérica para valores
                 if (aValue < bValue) {
                     return sortOrder === 'asc' ? -1 : 1;
                 }
                 if (aValue > bValue) {
                     return sortOrder === 'asc' ? 1 : -1;
                 }
-                return 0;
             }
             return 0;
         });
@@ -168,11 +181,11 @@ const FormOnus: React.FC = () => {
                                 <th onClick={() => handleSort('online')}>
                                     En línea {sortField === 'online' && sortOrder === 'asc' ? '⬆' : '⬇'}
                                 </th>
-                                <th onClick={() => handleSort('optics?.tx_power_onu')}>
-                                    Tx {sortField === 'optics?.tx_power_onu' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                <th onClick={() => handleSort('tx_power_onu')}>
+                                    Tx {sortField === 'tx_power_onu' && sortOrder === 'asc' ? '⬆' : '⬇'}
                                 </th>
-                                <th onClick={() => handleSort('optics?.rx_power_onu')}>
-                                    Rx {sortField === 'optics?.rx_power_onu' && sortOrder === 'asc' ? '⬆' : '⬇'}
+                                <th onClick={() => handleSort('rx_power_onu')}>
+                                    Rx {sortField === 'rx_power_onu' && sortOrder === 'asc' ? '⬆' : '⬇'}
                                 </th>
                                 <th onClick={() => handleSort('distance')}>
                                     Distancia {sortField === 'distance' && sortOrder === 'asc' ? '⬆' : '⬇'}

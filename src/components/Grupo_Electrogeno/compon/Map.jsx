@@ -2,29 +2,36 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MapContainer, TileLayer, Circle, Marker } from 'react-leaflet';
 import { divIcon } from 'leaflet';
-import { fetchGenerators } from '../store/generatorSlice';
+import { fetchLocations } from '../../../redux/slices/gruposSlice';
 import 'leaflet/dist/leaflet.css';
 
 function Map({ onNodeSelect }) {
   const dispatch = useDispatch();
-  const generators = useSelector(state => state.generators.list);
-  const status = useSelector(state => state.generators.status);
+  const generators = useSelector(state => state.grupos.locations);
+  const status = useSelector(state => state.grupos.status);
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchGenerators());
+      dispatch(fetchLocations());
     }
   }, [status, dispatch]);
+
+  // Forzar el redibujado del mapa
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 200);
 
   return (
     <MapContainer
       center={[-31.751049, -60.485658]}
       zoom={13}
-      style={{ height: '90vh', width: '100%' }}
+      style={{ height: '100vh', width: '100vw' }}
     >
       <TileLayer
-        url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+        //url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        //attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+        attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         maxZoom={19}
       />
       {generators.map(gen => (

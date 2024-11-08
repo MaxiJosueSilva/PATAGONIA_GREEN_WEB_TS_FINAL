@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Line } from 'react-chartjs-2';
-import { fetchHistoricalData, updateRealTimeData } from '../store/generatorSlice';
+import { getHistorial, updateRealTimeData } from '../../../redux/slices/gruposSlice';
 import moment from 'moment';
 import {
   Chart as ChartJS,
@@ -29,9 +29,9 @@ ChartJS.register(
   Filler
 );
 
-function EnergyChart({ selectedNode, socket }) {
+function EnergyChart({selectedNode}) {
   const dispatch = useDispatch();
-  const historicalData = useSelector(state => state.generators.historicalData[selectedNode]);
+  const historicalData = useSelector(state => state.grupos.historial);
   const chartRef = useRef(null);
 
   const [chartData, setChartData] = useState({
@@ -61,12 +61,20 @@ function EnergyChart({ selectedNode, socket }) {
   });
 
   useEffect(() => {
-    dispatch(fetchHistoricalData(selectedNode));
+    const interval = setInterval(() => {
+      dispatch(getHistorial(selectedNode));
+    }, 10000);
+    return () => clearInterval(interval);
   }, [selectedNode, dispatch]);
 
-  useEffect(() => {
-    if (!socket) return;
 
+  useEffect(() => {
+    if (historicalData) {
+      setChartData(formatChartData(historicalData));
+    }
+  }, [historicalData]);
+  
+  useEffect(() => {
     const handleUpdate = (data) => {
       if (data.node_id !== selectedNode) return;
 
@@ -79,7 +87,7 @@ function EnergyChart({ selectedNode, socket }) {
 
           const value = i === 0 ? data.energia?.entrada :
                        i === 1 ? data.energia?.salida :
-                       data.energia?.nebula;
+                       i === 2 ? data.energia?.nebula : 0;
 
           if (typeof value === 'number') {
             newData.push({ x: moment(data.timestamp).isBefore(moment().subtract(30, 'minutes')) ? moment().subtract(30, 'minutes') : moment(data.timestamp), y: value });
@@ -100,9 +108,9 @@ function EnergyChart({ selectedNode, socket }) {
       dispatch(updateRealTimeData(data));
     };
 
-    socket.on('real_time_update', handleUpdate);
-    return () => socket.off('real_time_update', handleUpdate);
-  }, [socket, selectedNode, dispatch]);
+    // Aquí se llama a handleUpdate
+    dispatch(updateRealTimeData({ node_id: selectedNode }));
+  }, [selectedNode, dispatch]);
 
   const formatChartData = (data) => {
     if (!data?.data) return {
@@ -150,7 +158,8 @@ function EnergyChart({ selectedNode, socket }) {
         fill: true,
         borderWidth: 1,
         data: series.map(point => ({
-          x: moment(point.x).isBefore(moment().subtract(30, 'minutes')) ? moment().subtract(30, 'minutes') : moment(point.x),
+          //x: moment(point.x).isBefore(moment().subtract(1, 'minutes')) ? moment().subtract(30, 'minutes') : moment(point.x),
+          x: point.x,
           y: point.y
         }))
       }))
@@ -170,8 +179,8 @@ function EnergyChart({ selectedNode, socket }) {
             minute: 'HH:mm'
           }
         },
-        min: moment().subtract(30, 'minutes'),
-        max: moment(),
+        // min: moment().subtract(30, 'minutes'),
+        // max: moment(),
         grid: { color: '#333' },
         ticks: { color: '#fff' }
       },

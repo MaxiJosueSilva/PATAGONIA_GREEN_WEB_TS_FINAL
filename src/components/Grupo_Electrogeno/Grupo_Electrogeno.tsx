@@ -5,9 +5,10 @@ import EthernetChart from './compon/EthernetChart';
 import PowerFlow from './compon/PowerFlow';
 import EnergyChart from './compon/EnergyChart';
 import AlertSystem from './compon/AlertSystem';
-import { fetchLocations, getHistorial } from '../../redux/slices/gruposSlice';
+import { fetchLocations, getHistorial, updateRealTimeData } from '../../redux/slices/gruposSlice';
 import { setSelectedNode } from '../../redux/slices/selectedNodeSlice';
-import './index.css';
+import './Grupo_Electrogeno.css';
+
 
 interface RealTimeData {
   [key: string]: any;
@@ -17,8 +18,6 @@ const Grupo_Electrogeno: React.FC = () =>  {
   const dispatch = useDispatch();
   const selectedNode = useSelector((state: { selectedNode: { nodeId: string } }) => state.selectedNode.nodeId);
   const [socket, setSocket] = React.useState(null);
-  const locations = useSelector((state: any) => state.grupos.locations);
-  const historial = useSelector((state: any) => state.grupos.historial);
 
   useEffect(() => {
     console.log('Componente Grupos montado');
@@ -26,6 +25,8 @@ const Grupo_Electrogeno: React.FC = () =>  {
     
     const intervalo = setInterval(() => {
         dispatch(fetchLocations() as any);
+        
+        getHistorial
     }, 1000);
 
     return () => clearInterval(intervalo);
@@ -33,43 +34,51 @@ const Grupo_Electrogeno: React.FC = () =>  {
 
   const handleNodeSelect = (nodeId: string) => {
     dispatch(setSelectedNode(nodeId));
+    //dispatch(updateRealTimeData(nodeId));
   };
 
   return (
-    <div className="container-fluid">
+    <div className="grupo-electrogeno-container">
       <AlertSystem socket={socket} />
-      <div className="row">
-        <div className="col-md-7">
+      <div className="grupo-electrogeno-content">
+        {/* Columna Izquierda: Mapa */}
+        <div className="map-container">
           <Map onNodeSelect={handleNodeSelect} />
         </div>
-        <div className="col-md-5">
-          <div className="card mb-3">
+  
+        {/* Columna Derecha: Gráficos */}
+        <div className="charts-container">
+          {/* EthernetChart */}
+          <div className="chart-card">
             <div className="card-header">
               <h5 className="card-title">ETHERNET - {selectedNode}</h5>
             </div>
             <div className="card-body">
-              <EthernetChart selectedNode={selectedNode} socket={socket} />
+              <EthernetChart selectedNode={selectedNode} />
             </div>
           </div>
-
-          <div className="card mb-3">
+  
+          {/* PowerFlow */}
+          <div className="chart-card">
             <div className="card-body">
               <PowerFlow selectedNode={selectedNode} />
             </div>
           </div>
-
-          <div className="card">
+  
+          {/* EnergyChart */}
+          <div className="chart-card">
             <div className="card-header">
               <h5 className="card-title">ENERGIA - {selectedNode}</h5>
             </div>
             <div className="card-body">
-              <EnergyChart selectedNode={selectedNode} socket={socket} />
+              <EnergyChart selectedNode={selectedNode} />
             </div>
           </div>
         </div>
       </div>
     </div>
   );
+  
 }
 
 export default Grupo_Electrogeno;

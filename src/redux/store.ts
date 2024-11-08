@@ -10,6 +10,7 @@ import datacenterSlice from './slices/datacenterSlice';
 import selectedNodeReducer from './slices/selectedNodeSlice';
 import generatorReducer from './slices/generatorSlice';
 import alertReducer from './slices/alertSlice';
+import utilsReducer from './slices/utilsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -23,7 +24,8 @@ export const store = configureStore({
     datacenter: datacenterSlice,
     selectedNode: selectedNodeReducer,
     generators: generatorReducer,
-    alerts: alertReducer
+    alerts: alertReducer,
+    utils: utilsReducer
   },
 });
 
