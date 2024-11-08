@@ -47,6 +47,28 @@ export const fetchSBS911 = createAsyncThunk('grupos/fetchSBS911', async () => {
     return response.data;
 });
 
+export const fetchLocations = createAsyncThunk('grupos/fetchLocations', async () => {
+    const response = await axios.get(`${ipUnificada}/grupos/locations`, {
+        auth: {
+            username: usuario,
+            password: contraseña
+        }
+    });
+    return response.data;
+});
+
+export const getHistorial = createAsyncThunk('grupos/getHistorial', async (id) => {
+    const response = await axios.get(`${ipUnificada}/grupos/gethistorial/${id}`, {
+        auth: {
+            username: usuario,
+            password: contraseña
+        }
+    });
+    return response.data;
+});
+
+
+
 const gruposSlice = createSlice({
     name: 'grupos',
     initialState: {
@@ -54,6 +76,8 @@ const gruposSlice = createSlice({
         sbs2: [],
         sbs3: [],
         sbs911: [],
+        locations: [],
+        historial: [],
         status: 'idle',
         error: null,
     },
@@ -101,6 +125,28 @@ const gruposSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(fetchSBS911.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(fetchLocations.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.locations = action.payload;
+            })
+            .addCase(fetchLocations.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchLocations.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(getHistorial.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.historial = action.payload;
+            })
+            .addCase(getHistorial.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(getHistorial.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             });

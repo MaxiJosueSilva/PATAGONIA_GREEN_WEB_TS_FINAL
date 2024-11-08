@@ -7,6 +7,9 @@ import sbsReducer from './slices/sbsSlice';
 import onuReducer from './slices/onuSlice';
 import neo4jReducer from './slices/neo4jSlice';
 import datacenterSlice from './slices/datacenterSlice';
+import selectedNodeReducer from './slices/selectedNodeSlice';
+import generatorReducer from './slices/generatorSlice';
+import alertReducer from './slices/alertSlice';
 
 export const store = configureStore({
   reducer: {
@@ -17,7 +20,10 @@ export const store = configureStore({
     sbs: sbsReducer,
     onus: onuReducer,
     neo4j: neo4jReducer,
-    datacenter: datacenterSlice
+    datacenter: datacenterSlice,
+    selectedNode: selectedNodeReducer,
+    generators: generatorReducer,
+    alerts: alertReducer
   },
 });
 
